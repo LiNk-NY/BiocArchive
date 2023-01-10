@@ -1,0 +1,20 @@
+Package: BiocArchive
+Title: Access the Bioconductor archives and install packages from previous
+  releases
+Version: 0.99.0
+Authors@R: person(
+    "Marcel", "Ramos", , "marcel.ramosperez@roswellpark.org",
+    c("aut", "cre"), c(ORCID = "0000-0002-3242-0582")
+  )
+Description: Install older versions of Bioconductor based on the R version
+  currently installed in the system. The package relies on BiocManager to
+  install packages but makes sure that CRAN package versions are downloaded
+  from either an MRAN or RSPM snapshot. These snapshots will conincide with
+  the last built date of the requested Bioconductor version.
+Imports:
+  BiocManager,
+  BiocPkgTools
+License: Artistic-2.0
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.3
