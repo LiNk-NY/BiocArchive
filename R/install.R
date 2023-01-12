@@ -123,6 +123,6 @@ install <- function(
         )
         on.exit(do.call(Sys.setenv, as.list(use_binaries)))
     }
-    BiocManager::install(pkgs = pkgs, ...)
+    BiocManager::install(pkgs = pkgs, version = version, ...)
 }
 
