@@ -16,7 +16,8 @@ Imports:
   rvest,
   xml2
 Suggests:
-  lubridate
+  lubridate,
+  tinytest
 License: Artistic-2.0
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
