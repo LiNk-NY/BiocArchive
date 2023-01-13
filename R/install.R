@@ -32,7 +32,7 @@
 #' This function allows users to install packages from a previously released
 #' Bioconductor version.
 #'
-#' @aliases BiocPkgTools.snapshot BiocManager.snapshot
+#' @aliases BiocArchive.snapshot BiocManager.snapshot
 #'
 #' @details
 #'
@@ -43,8 +43,8 @@
 #' _Bioconductor_ version 3.11 was current until October 28, 2020; CRAN packages
 #' are therefore installed from a snapshot created on 2020-10-28. By default,
 #' the snapshots are from 'RSPM', the [RStudio Package Manager][RSPM]. Use
-#' `options(BiocPkgTools.snapshot = "MRAN")` to instead use the [Microsoft R
-#' Archive Network][MRAN], or `options(BiocPkgTools.snapshot = "CRAN")` to use
+#' `options(BiocArchive.snapshot = "MRAN")` to instead use the [Microsoft R
+#' Archive Network][MRAN], or `options(BiocArchive.snapshot = "CRAN")` to use
 #' the current CRAN repository (i.e., disabling the snapshot feature).
 #'
 #' [MRAN]: https://mran.microsoft.com/timemachine
@@ -54,7 +54,7 @@
 #' setting for `CRAN` to allow installation of CRAN packages from either the
 #' [RSPM] or [MRAN] time machines. The function will also modify the
 #' `BIOCONDUCTOR_USE_CONTAINER_REPOSITORY` environment variable to temporarily
-#' disable binary package installations. `BiocPkgTools.snapshot` has replaced
+#' disable binary package installations. `BiocArchive.snapshot` has replaced
 #' `BiocManager.snapshot`.
 #'
 #' It may be desirable to specify different default repositories, especially
@@ -75,7 +75,7 @@
 #'
 #' @param snapshot character(1) The snapshot CRAN repository to use for
 #'   reproducibility. This defaults to the value of
-#'   `getOption("BiocPkgTools.snapshot", "RSPM")`.
+#'   `getOption("BiocArchive.snapshot", "RSPM")`.
 #'
 #' @return Mostly called for the side-effects of copying and modifying the
 #'   `config.yaml` and `.Renviron` files to reproduce an R / Bioconductor
@@ -91,7 +91,7 @@
 install <- function(
         pkgs = character(),
         version = BiocManager::version(),
-        snapshot = getOption("BiocPkgTools.snapshot", "RSPM"),
+        snapshot = getOption("BiocArchive.snapshot", "RSPM"),
         ...
 ) {
     repos <- getOption("repos")
@@ -101,7 +101,7 @@ install <- function(
     valid <- c("CRAN", "MRAN", "RSPM")
     if (length(snapshot) != 1L || !snapshot %in% valid)
         .stop(
-            "'getOption(\"BiocPkgTools.snapshot\")' must be one of %s",
+            "'getOption(\"BiocArchive.snapshot\")' must be one of %s",
             paste0("'", valid, "'", collapse = " ")
         )
     cran <- repos["CRAN"]

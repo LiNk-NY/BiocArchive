@@ -2,14 +2,14 @@
 % Please edit documentation in R/install.R
 \name{install}
 \alias{install}
-\alias{BiocPkgTools.snapshot}
+\alias{BiocArchive.snapshot}
 \alias{BiocManager.snapshot}
 \title{Install packages from a previous release of Bioconductor for reproducibility}
 \usage{
 install(
   pkgs = character(),
   version = BiocManager::version(),
-  snapshot = getOption("BiocPkgTools.snapshot", "RSPM"),
+  snapshot = getOption("BiocArchive.snapshot", "RSPM"),
   ...
 )
 }
@@ -26,7 +26,7 @@ by \code{BiocManager::version} by default.}
 
 \item{snapshot}{character(1) The snapshot CRAN repository to use for
 reproducibility. This defaults to the value of
-\code{getOption("BiocPkgTools.snapshot", "RSPM")}.}
+\code{getOption("BiocArchive.snapshot", "RSPM")}.}
 
 \item{...}{Additional arguments used by \code{install.packages()}.}
 }
@@ -47,14 +47,14 @@ the actual R/Bioconductor installation, e.g., Bioconductor 3.11. For example,
 \emph{Bioconductor} version 3.11 was current until October 28, 2020; CRAN packages
 are therefore installed from a snapshot created on 2020-10-28. By default,
 the snapshots are from 'RSPM', the \href{https://packagemanager.rstudio.com/client/#/repos/2/overview}{RStudio Package Manager}. Use
-\code{options(BiocPkgTools.snapshot = "MRAN")} to instead use the \href{https://mran.microsoft.com/timemachine}{Microsoft R Archive Network}, or \code{options(BiocPkgTools.snapshot = "CRAN")} to use
+\code{options(BiocArchive.snapshot = "MRAN")} to instead use the \href{https://mran.microsoft.com/timemachine}{Microsoft R Archive Network}, or \code{options(BiocArchive.snapshot = "CRAN")} to use
 the current CRAN repository (i.e., disabling the snapshot feature).
 
 Note that the function will temporarily change the \code{getOption('repos')}
 setting for \code{CRAN} to allow installation of CRAN packages from either the
 \href{https://packagemanager.rstudio.com/client/#/repos/2/overview}{RSPM} or \href{https://mran.microsoft.com/timemachine}{MRAN} time machines. The function will also modify the
 \code{BIOCONDUCTOR_USE_CONTAINER_REPOSITORY} environment variable to temporarily
-disable binary package installations. \code{BiocPkgTools.snapshot} has replaced
+disable binary package installations. \code{BiocArchive.snapshot} has replaced
 \code{BiocManager.snapshot}.
 
 It may be desirable to specify different default repositories, especially
