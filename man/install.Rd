@@ -67,9 +67,9 @@ release) results in use of CRAN packages not consistent with \emph{Bioconductor}
 best practices.
 }
 \examples{
-
 if (interactive()) {
-  archiveInstall("DESeq2", version = "3.14")
-}
 
+  archiveInstall("DESeq2", version = "3.14")
+
+}
 }

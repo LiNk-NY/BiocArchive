@@ -82,11 +82,11 @@
 #'   package environment from a previous Bioconductor release.
 #'
 #' @examples
-#'
 #' if (interactive()) {
-#'   archiveInstall("DESeq2", version = "3.14")
-#' }
 #'
+#'   archiveInstall("DESeq2", version = "3.14")
+#'
+#' }
 #' @export
 install <- function(
         pkgs = character(),
@@ -95,7 +95,7 @@ install <- function(
         ...
 ) {
     repos <- getOption("repos")
-    last_date <- BiocPkgTools::biocLastBuildDate(version = version)
+    last_date <- lastBuilt(version = version)
     if (is.na(last_date))
         stop("The 'version' ", version, " archive is not supported")
     valid <- c("CRAN", "MRAN", "RSPM")

@@ -13,7 +13,10 @@ Description: Install older versions of Bioconductor based on the R version
   the last built date of the requested Bioconductor version.
 Imports:
   BiocManager,
-  BiocPkgTools
+  rvest,
+  xml2
+Suggests:
+  lubridate
 License: Artistic-2.0
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
