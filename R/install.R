@@ -27,6 +27,20 @@
         cran
 }
 
+.resolve_archive <- function(pkg, rel_date = c('3.14' = "2022-04-13")) {
+    repo_standin <- "https://cran.r-project.org/src/contrib/Archive"
+    page <- rvest::read_html(paste(repo_standin, pkg, sep = "/"))
+    table <- rvest::html_table(
+        page, na.strings = c("NA", "", "-"), header = TRUE
+    )[[1]][, c("Name", "Last modified")]
+    table <- table[complete.cases(table), ]
+    latest <-
+        lubridate::ymd(rel_date) >= lubridate::ymd_hm(table$`Last modified`)
+    indx <- tail(which(latest), 1)
+    archive <- unlist(table[indx, "Name"])
+    paste(repo_standin, pkg, archive, sep = "/")
+}
+
 #' Install packages from a previous release of Bioconductor for reproducibility
 #'
 #' This function allows users to install packages from a previously released
