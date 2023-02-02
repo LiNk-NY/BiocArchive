@@ -1,0 +1,85 @@
+---
+title: "Install archived Bioconductor packages from previous releases"
+author: "Marcel Ramos"
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+output:
+  BiocStyle::html_document:
+    number_sections: yes
+    toc: true
+vignette: >
+  %\VignetteIndexEntry{BiocArchive Quick Start}
+  %\VignetteEnginve{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+# Introduction
+
+`BiocArchive` is a package dedicated to preserving reproducibility with older
+Bioconductor versions. It only works on older Bioconductor releases such
+as `3.14`. Note that users must have the proper `3.14` setup to be able
+to install packages from the archive. This means that users should be running
+R version `4.1`.
+
+It is highly recommended that users run docker containers with the appropriate
+R version installation and install the package via GitHub or via source.
+
+# Installation
+
+Currently, it is available via GitHub. 
+
+```{r}
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+
+BiocManager::install("LiNk-NY/BiocArchive")
+```
+
+# Last release version
+
+The `lastBuilt` helper function finds the last built date for the supplied
+Bioconductor version. Other functions rely on this date to install the
+appropriate packages.
+
+```{r}
+lastBuilt(version = "3.14")
+```
+
+# Archived installations
+
+To install Bioconductor packages, it is minimally required that the user
+install via `BiocManager` on the docker container. The added value that
+BiocArchive provides is that it provides versioned installations of CRAN
+packages from either the RStudio Package Manager (`RSPM`) or the Microsoft R
+Archive Network (`MRAN`).
+
+Bioconductor installations should work as normal as if one were installing the
+package via `BiocManager` within the legacy `3.14` container.
+
+```{r}
+install("DESeq2", version = "3.14", dry.run = TRUE)
+
+install("MultiAssayExperiment", version = "3.14", dry.run = TRUE)
+```
+
+# CRAN installations from the source archive
+
+Packages on CRAN have a history of versions at a particular URL location:
+
+<https://cran.r-project.org/src/contrib/Archive>
+
+A CRAN package from the archive can be installed using `CRANinstall`:
+
+```{r}
+CRANinstall("dplyr", "3.14", dry.run = TRUE)
+```
+
+Note that this method only works on one package at a time. Future support
+will allow installations for multiple packages at a time. 
+
+# Session Information
+
+```{r}
+sessionInfo()
+```
+
+
