@@ -10,6 +10,7 @@ install(
   pkgs = character(),
   version = BiocManager::version(),
   snapshot = getOption("BiocArchive.snapshot", "RSPM"),
+  dry.run = FALSE,
   ...
 )
 }
@@ -20,13 +21,16 @@ to \verb{update =} and \verb{ask =}. Package names containing a '/' are
 treated as GitHub repositories and installed using
 \code{remotes::install_github()}.}
 
-\item{version}{character(1) The desired version to reproduce. This is largely
-dictated by the current R / Bioconductor version installed and is indicated
-by \code{BiocManager::version} by default.}
+\item{version}{\code{character(1)} The desired version to reproduce. This is
+largely dictated by the current R / Bioconductor version installed and is
+indicated by \code{BiocManager::version} by default.}
 
-\item{snapshot}{character(1) The snapshot CRAN repository to use for
+\item{snapshot}{\code{character(1)} The snapshot CRAN repository to use for
 reproducibility. This defaults to the value of
 \code{getOption("BiocArchive.snapshot", "RSPM")}.}
+
+\item{dry.run}{\code{logical(1)} Whether to show only the repository and forgo
+the package installation.}
 
 \item{...}{Additional arguments used by \code{install.packages()}.}
 }
@@ -69,7 +73,7 @@ best practices.
 \examples{
 if (interactive()) {
 
-  archiveInstall("DESeq2", version = "3.14")
+  install("DESeq2", version = "3.14")
 
 }
 }

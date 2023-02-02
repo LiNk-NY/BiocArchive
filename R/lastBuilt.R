@@ -24,7 +24,7 @@ lastBuilt <- function(version = "all") {
     if (!requireNamespace("lubridate", quietly = TRUE))
         stop("Install 'lubridate' to run 'lastBuilt'")
     buildrep <- read_html("https://bioconductor.org/checkResults/")
-    nodes <- html_nodes(buildrep, "div")[-1:-2]
+    nodes <- html_nodes(buildrep, "div")[-seq(1, 2)]
     bioc_names <- html_text(html_nodes(nodes, "h3"))
     bioc_vers <- gsub("Bioconductor ", "", bioc_names, fixed = TRUE)
     names(nodes) <- bioc_vers

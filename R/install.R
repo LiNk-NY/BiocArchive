@@ -27,16 +27,16 @@
         cran
 }
 
-.resolve_archive <- function(pkg, rel_date = c('3.14' = "2022-04-13")) {
+.resolve_archive <- function(pkg, rel_date) {
     repo_standin <- "https://cran.r-project.org/src/contrib/Archive"
     page <- rvest::read_html(paste(repo_standin, pkg, sep = "/"))
     table <- rvest::html_table(
         page, na.strings = c("NA", "", "-"), header = TRUE
     )[[1]][, c("Name", "Last modified")]
-    table <- table[complete.cases(table), ]
+    table <- table[stats::complete.cases(table), ]
     latest <-
         lubridate::ymd(rel_date) >= lubridate::ymd_hm(table$`Last modified`)
-    indx <- tail(which(latest), 1)
+    indx <- utils::tail(which(latest), 1)
     archive <- unlist(table[indx, "Name"])
     paste(repo_standin, pkg, archive, sep = "/")
 }
@@ -83,13 +83,16 @@
 #'
 #' @inheritParams BiocManager::install
 #'
-#' @param version character(1) The desired version to reproduce. This is largely
-#'   dictated by the current R / Bioconductor version installed and is indicated
-#'   by `BiocManager::version` by default.
+#' @param version `character(1)` The desired version to reproduce. This is
+#'   largely dictated by the current R / Bioconductor version installed and is
+#'   indicated by `BiocManager::version` by default.
 #'
-#' @param snapshot character(1) The snapshot CRAN repository to use for
+#' @param snapshot `character(1)` The snapshot CRAN repository to use for
 #'   reproducibility. This defaults to the value of
 #'   `getOption("BiocArchive.snapshot", "RSPM")`.
+#'
+#' @param dry.run `logical(1)` Whether to show only the repository and forgo
+#'   the package installation.
 #'
 #' @return Mostly called for the side-effects of copying and modifying the
 #'   `config.yaml` and `.Renviron` files to reproduce an R / Bioconductor
@@ -98,7 +101,7 @@
 #' @examples
 #' if (interactive()) {
 #'
-#'   archiveInstall("DESeq2", version = "3.14")
+#'   install("DESeq2", version = "3.14")
 #'
 #' }
 #' @export
@@ -106,6 +109,7 @@ install <- function(
         pkgs = character(),
         version = BiocManager::version(),
         snapshot = getOption("BiocArchive.snapshot", "RSPM"),
+        dry.run = FALSE,
         ...
 ) {
     repos <- getOption("repos")
@@ -126,6 +130,8 @@ install <- function(
         MRAN = .repositories_mran(cran, last_date),
         CRAN = .repositories_cran(cran)
     )
+    if (dry.run)
+        return(repos)
     old_opt <- options(repos = repos["CRAN"])
     on.exit(options(old_opt))
     use_binaries <- Sys.getenv(
@@ -135,8 +141,47 @@ install <- function(
         Sys.setenv(
             BIOCONDUCTOR_USE_CONTAINER_REPOSITORY = FALSE
         )
-        on.exit(do.call(Sys.setenv, as.list(use_binaries)))
+        on.exit(do.call(Sys.setenv, as.list(use_binaries)), add = TRUE)
     }
     BiocManager::install(pkgs = pkgs, version = version, ...)
+}
+
+#' Install a package from the CRAN archive
+#'
+#' The function looks through the CRAN archive for a particular package
+#' and finds the version that is compatible with the archived Bioconductor
+#' version at the date of the last Bioconductor release for that version.
+#'
+#' @param pkg `character(1)` A package whose version compatible with the
+#'   archived Bioconductor version is required.
+#'
+#' @inheritParams install
+#'
+#' @examples
+#' if (interactive()) {
+#'
+#'     CRANinstall("dplyr", version = "3.14")
+#'
+#' }
+#'
+#' @export
+CRANinstall <-
+    function(pkg, version = BiocManager::version(), dry.run = FALSE, ...)
+{
+    last_rel <- lastBuilt(version = version)
+    arch_url <- .resolve_archive(pkg, last_rel)
+    pkg_arch <- basename(arch_url)
+    if (dry.run)
+        return(arch_url)
+    dl_pkgs_dir <- file.path(tempdir(), "downloaded_packages")
+    if (!dir.exists(dl_pkgs_dir))
+        dir.create(dl_pkgs_dir)
+    temp_pkg <- file.path(dl_pkgs_dir, pkg_arch)
+    utils::download.file(arch_url, temp_pkg)
+    utils::install.packages(temp_pkg, repos = NULL, type = "source", ...)
+    message(
+        "\nThe downloaded source packages are in\n        ",
+        sQuote(dl_pkgs_dir)
+    )
 }
 
