@@ -19,8 +19,11 @@ Imports:
   utils,
   xml2
 Suggests:
+  knitr,
   lubridate,
+  rmarkdown,
   tinytest
+VignetteBuilder: knitr
 License: Artistic-2.0
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
