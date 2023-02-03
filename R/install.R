@@ -57,7 +57,7 @@
 #'
 #' @examples
 #'
-#' install("DESeq2", version = "3.14", dry.run = TRUE)
+#' install("DESeq2", version = "3.14", snapshot = "RSPM", dry.run = TRUE)
 #'
 #' @export
 install <- function(
@@ -74,6 +74,9 @@ install <- function(
         version = version, last_date = last_date, snapshot = snapshot
     )
     on.exit(options(old_opt))
+
+    if (dry.run)
+        return(getOption("repos"))
 
     use_binaries <- Sys.getenv(
         "BIOCONDUCTOR_USE_CONTAINER_REPOSITORY", names = TRUE, unset = FALSE

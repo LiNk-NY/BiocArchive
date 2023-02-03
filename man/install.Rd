@@ -72,6 +72,6 @@ best practices.
 }
 \examples{
 
-install("DESeq2", version = "3.14", dry.run = TRUE)
+install("DESeq2", version = "3.14", snapshot = "RSPM", dry.run = TRUE)
 
 }
