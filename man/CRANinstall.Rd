@@ -4,31 +4,28 @@
 \alias{CRANinstall}
 \title{Install a package from the CRAN archive}
 \usage{
-CRANinstall(pkg, version = BiocManager::version(), dry.run = FALSE, ...)
+CRANinstall(pkgs, version = BiocManager::version(), dry.run = FALSE, ...)
 }
 \arguments{
-\item{pkg}{\code{character(1)} A package whose version compatible with the
-archived Bioconductor version is required.}
+\item{pkgs}{\code{character()} A vector of package names whose versions are sought
+to be compatible with the archived version of Bioconductor.}
 
 \item{version}{\code{character(1)} The desired version to reproduce. This is
 largely dictated by the current R / Bioconductor version installed and is
 indicated by \code{BiocManager::version} by default.}
 
-\item{dry.run}{\code{logical(1)} Whether to show only the repository and forgo
-the package installation.}
+\item{dry.run}{\code{logical(1)} Whether to show only the time machine repository
+and forgo the package installation.}
 
 \item{...}{Additional arguments used by \code{install.packages()}.}
 }
 \description{
 The function looks through the CRAN archive for a particular package
 and finds the version that is compatible with the archived Bioconductor
-version at the date of the last Bioconductor release for that version.
+version using the date of that version's last Bioconductor release.
 }
 \examples{
-if (interactive()) {
 
-    CRANinstall("dplyr", version = "3.14")
-
-}
+CRANinstall(c("dplyr", "ggplot2"), version = "3.14", dry.run = TRUE)
 
 }

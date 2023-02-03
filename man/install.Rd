@@ -29,8 +29,8 @@ indicated by \code{BiocManager::version} by default.}
 reproducibility. This defaults to the value of
 \code{getOption("BiocArchive.snapshot", "RSPM")}.}
 
-\item{dry.run}{\code{logical(1)} Whether to show only the repository and forgo
-the package installation.}
+\item{dry.run}{\code{logical(1)} Whether to show only the time machine repository
+and forgo the package installation.}
 
 \item{...}{Additional arguments used by \code{install.packages()}.}
 }
@@ -71,9 +71,7 @@ release) results in use of CRAN packages not consistent with \emph{Bioconductor}
 best practices.
 }
 \examples{
-if (interactive()) {
 
-  install("DESeq2", version = "3.14")
+install("DESeq2", version = "3.14", dry.run = TRUE)
 
-}
 }

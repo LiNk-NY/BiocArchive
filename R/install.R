@@ -27,16 +27,15 @@
         cran
 }
 
-.resolve_archive <- function(pkg, rel_date) {
+.resolve_archive <- function(pkg, last_built_date) {
     repo_standin <- "https://cran.r-project.org/src/contrib/Archive"
     page <- rvest::read_html(paste(repo_standin, pkg, sep = "/"))
     table <- rvest::html_table(
         page, na.strings = c("NA", "", "-"), header = TRUE
     )[[1]][, c("Name", "Last modified")]
-    table <- table[stats::complete.cases(table), ]
-    latest <-
-        lubridate::ymd(rel_date) >= lubridate::ymd_hm(table$`Last modified`)
-    indx <- utils::tail(which(latest), 1)
+    latest <- lubridate::ymd(last_built_date) >=
+        lubridate::ymd_hm(table$`Last modified`)
+    indx <- max(which(latest))
     archive <- unlist(table[indx, "Name"])
     paste(repo_standin, pkg, archive, sep = "/")
 }
@@ -91,19 +90,17 @@
 #'   reproducibility. This defaults to the value of
 #'   `getOption("BiocArchive.snapshot", "RSPM")`.
 #'
-#' @param dry.run `logical(1)` Whether to show only the repository and forgo
-#'   the package installation.
+#' @param dry.run `logical(1)` Whether to show only the time machine repository
+#'   and forgo the package installation.
 #'
 #' @return Mostly called for the side-effects of copying and modifying the
 #'   `config.yaml` and `.Renviron` files to reproduce an R / Bioconductor
 #'   package environment from a previous Bioconductor release.
 #'
 #' @examples
-#' if (interactive()) {
 #'
-#'   install("DESeq2", version = "3.14")
+#' install("DESeq2", version = "3.14", dry.run = TRUE)
 #'
-#' }
 #' @export
 install <- function(
         pkgs = character(),
@@ -150,38 +147,46 @@ install <- function(
 #'
 #' The function looks through the CRAN archive for a particular package
 #' and finds the version that is compatible with the archived Bioconductor
-#' version at the date of the last Bioconductor release for that version.
+#' version using the date of that version's last Bioconductor release.
 #'
-#' @param pkg `character(1)` A package whose version compatible with the
-#'   archived Bioconductor version is required.
+#' @param pkgs `character()` A vector of package names whose versions are sought
+#'   to be compatible with the archived version of Bioconductor.
 #'
 #' @inheritParams install
 #'
 #' @examples
-#' if (interactive()) {
 #'
-#'     CRANinstall("dplyr", version = "3.14")
-#'
-#' }
+#' CRANinstall(c("dplyr", "ggplot2"), version = "3.14", dry.run = TRUE)
 #'
 #' @export
 CRANinstall <-
-    function(pkg, version = BiocManager::version(), dry.run = FALSE, ...)
+    function(pkgs, version = BiocManager::version(), dry.run = FALSE, ...)
 {
-    last_rel <- lastBuilt(version = version)
-    arch_url <- .resolve_archive(pkg, last_rel)
-    pkg_arch <- basename(arch_url)
-    if (dry.run)
-        return(arch_url)
+    last_built <- lastBuilt(version = version)
     dl_pkgs_dir <- file.path(tempdir(), "downloaded_packages")
     if (!dir.exists(dl_pkgs_dir))
         dir.create(dl_pkgs_dir)
-    temp_pkg <- file.path(dl_pkgs_dir, pkg_arch)
-    utils::download.file(arch_url, temp_pkg)
-    utils::install.packages(temp_pkg, repos = NULL, type = "source", ...)
+    addArgs <- list(
+        last_built = last_built, temp_path = dl_pkgs_dir, dry.run = dry.run,
+        ...
+    )
+    if (dry.run)
+        pkgs <- unique(c(utils::head(pkgs, 1), utils::tail(pkgs, 1)))
+    mapply(
+        .install_one, pkg = pkgs, MoreArgs = addArgs, SIMPLIFY = FALSE
+    )
+
     message(
         "\nThe downloaded source packages are in\n        ",
         sQuote(dl_pkgs_dir)
     )
 }
 
+.install_one <- function(pkg, last_built, temp_path, dry.run, ...) {
+    arch_url <- .resolve_archive(pkg, last_built)
+    if (dry.run)
+        return(message(arch_url))
+    pkg_arch <- basename(arch_url)
+    utils::download.file(arch_url, temp_path)
+    utils::install.packages(temp_path, repos = NULL, type = "source", ...)
+}
