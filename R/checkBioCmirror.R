@@ -2,20 +2,28 @@
 #'
 #' The function checks the `PACKAGES` file with `RCurl::url.exists`.
 #'
-#' @param mirror character(1) The Bioconductor mirror to be tested resolves from
-#'   `getOption("BioC_mirror")`. If one is not selected, `chooseBioCmirror()`
-#'   will be run and the user will be able to select a mirror interactively.
+#' @param mirror `character(1)` The Bioconductor mirror to be tested resolves
+#'   from `getOption("BioC_mirror")`. If one is not selected,
+#'   `chooseBioCmirror()` will be run and the user will be able to select a
+#'   mirror interactively.
 #'
-#' @param version character(1) The Bioconductor version to be checked.
+#' @param version `character(1)` The Bioconductor version to be checked.
 #'
-#' @param repoType character(1) One of the Bioconductor package types, including
-#'   `BioCsoft` (default), `BioCann`, `BioCexp`, `BioCworkflows`, and
+#' @param repoType `character(1)` One of the Bioconductor package types,
+#'   including `BioCsoft` (default), `BioCann`, `BioCexp`, `BioCworkflows`, and
 #'   `BioCbooks`.
 #'
-#' @param type character(1) The package type whether "source", "binary",
+#' @param type `character(1)` The package type whether "source", "binary",
 #'   "mac.binary", or "win.binary" as given by `getOption("pkgType")`. See
 #'   `install.packages` for details.
 #'
+#' @return A logical value indicating availability of the mirror indicated in
+#'   the name.
+#'
+#' @examples
+#' bioc_url <- "https://bioconductor.org"
+#' bioc_mirror <- c(`0-Bioconductor (World-wide) [https]` = bioc_url)
+#' checkBioCmirror(mirror = bioc_mirror)
 #' @export
 checkBioCmirror <- function(
     mirror = getOption("BioC_mirror"),
@@ -30,7 +38,7 @@ checkBioCmirror <- function(
     }
     repo_type <- match.arg(repoType)
     path <- repo_short_names[
-        repo_short_names[["repo.name"]] == repoType, "json.file"
+        repo_short_names[["repo.name"]] == repo_type, "url.name"
     ]
     bioc_repo <-
         paste(mirror, "packages", as.character(version), path, sep = "/")

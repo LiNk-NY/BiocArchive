@@ -19,6 +19,10 @@ and forgo the package installation.}
 
 \item{...}{Additional arguments used by \code{install.packages()}.}
 }
+\value{
+Mostly called for its side effect of installing the package from
+the CRAN archives that corresponds to the given Bioconductor version.
+}
 \description{
 The function looks through the CRAN archive for a particular package
 and finds the version that is compatible with the archived Bioconductor

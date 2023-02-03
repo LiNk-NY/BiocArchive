@@ -23,8 +23,12 @@ repo_short_names <- data.frame(
         "data-annotation", NA_character_),
     stat.file = c("bioc", "experiment", "workflows",
         "annotation", NA_character_),
-    json.file = c("bioc", "data/experiment", "workflows",
+    url.name = c("bioc", "data/experiment", "workflows",
         "data/annotation", NA_character_),
     repo.name = c("BioCsoft", "BioCexp", "BioCworkflows",
         "BioCann", "BioCbooks")
 )
+
+.match_get_short_name <- function(pkgType, colName) {
+    repo_short_names[match(pkgType, repo_short_names[["repository"]]), colName]
+}

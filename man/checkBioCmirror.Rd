@@ -12,20 +12,30 @@ checkBioCmirror(
 )
 }
 \arguments{
-\item{mirror}{character(1) The Bioconductor mirror to be tested resolves from
-\code{getOption("BioC_mirror")}. If one is not selected, \code{chooseBioCmirror()}
-will be run and the user will be able to select a mirror interactively.}
+\item{mirror}{\code{character(1)} The Bioconductor mirror to be tested resolves
+from \code{getOption("BioC_mirror")}. If one is not selected,
+\code{chooseBioCmirror()} will be run and the user will be able to select a
+mirror interactively.}
 
-\item{version}{character(1) The Bioconductor version to be checked.}
+\item{version}{\code{character(1)} The Bioconductor version to be checked.}
 
-\item{repoType}{character(1) One of the Bioconductor package types, including
-\code{BioCsoft} (default), \code{BioCann}, \code{BioCexp}, \code{BioCworkflows}, and
+\item{repoType}{\code{character(1)} One of the Bioconductor package types,
+including \code{BioCsoft} (default), \code{BioCann}, \code{BioCexp}, \code{BioCworkflows}, and
 \code{BioCbooks}.}
 
-\item{type}{character(1) The package type whether "source", "binary",
+\item{type}{\code{character(1)} The package type whether "source", "binary",
 "mac.binary", or "win.binary" as given by \code{getOption("pkgType")}. See
 \code{install.packages} for details.}
 }
+\value{
+A logical value indicating availability of the mirror indicated in
+the name.
+}
 \description{
 The function checks the \code{PACKAGES} file with \code{RCurl::url.exists}.
+}
+\examples{
+bioc_url <- "https://bioconductor.org"
+bioc_mirror <- c(`0-Bioconductor (World-wide) [https]` = bioc_url)
+checkBioCmirror(mirror = bioc_mirror)
 }
