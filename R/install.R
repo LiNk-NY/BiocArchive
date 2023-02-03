@@ -1,49 +1,3 @@
-.RSPM_URL <- "https://packagemanager.rstudio.com/cran/"
-.MRAN_URL <- "https://mran.microsoft.com/snapshot/"
-.CRAN_URL <- "https://cloud.r-project.org/"
-
-.repositories_rspm <- function(cran, rspm_version) {
-    if (is.na(rspm_version)) {
-        cran
-    } else {
-        rspm_version <- as.Date(rspm_version, "%Y-%m-%d")
-        if (is.na(rspm_version))
-            stop("'RSPM' date format does not match '%Y-%m-%d'")
-        paste0(.RSPM_URL, rspm_version)
-    }
-}
-
-.repositories_mran <- function(cran, mran_version) {
-    if (is.na(mran_version)) {
-        cran
-    } else {
-        mran_version <- as.Date(mran_version, "%Y-%m-%d")
-        if (is.na(mran_version))
-            stop("'MRAN' date format does not match '%Y-%m-%d'")
-        paste0(.MRAN_URL, mran_version)
-    }
-}
-
-.repositories_cran <- function(cran) {
-    if (identical(cran, c(CRAN = "@CRAN@")) || is.na(cran))
-        .CRAN_URL
-    else
-        cran
-}
-
-.resolve_archive <- function(pkg, last_built_date) {
-    repo_standin <- "https://cran.r-project.org/src/contrib/Archive"
-    page <- rvest::read_html(paste(repo_standin, pkg, sep = "/"))
-    table <- rvest::html_table(
-        page, na.strings = c("NA", "", "-"), header = TRUE
-    )[[1]][, c("Name", "Last modified")]
-    latest <- lubridate::ymd(last_built_date) >=
-        lubridate::ymd_hm(table$`Last modified`)
-    indx <- max(which(latest))
-    archive <- unlist(table[indx, "Name"])
-    paste(repo_standin, pkg, archive, sep = "/")
-}
-
 #' Install packages from a previous release of Bioconductor for reproducibility
 #'
 #' This function allows users to install packages from a previously released
@@ -115,26 +69,12 @@ install <- function(
 ) {
     repos <- getOption("repos")
     last_date <- lastBuilt(version = version)
-    if (is.na(last_date))
-        stop("The 'version' ", version, " archive is not supported")
-    valid <- c("CRAN", "MRAN", "RSPM")
-    if (length(snapshot) != 1L || !snapshot %in% valid)
-        .stop(
-            "'getOption(\"BiocArchive.snapshot\")' must be one of %s",
-            paste0("'", valid, "'", collapse = " ")
-        )
-    cran <- repos["CRAN"]
-    rename <- repos == "@CRAN@" | names(repos) == "CRAN"
-    repos[rename] <- switch(
-        snapshot,
-        RSPM = .repositories_rspm(cran, last_date),
-        MRAN = .repositories_mran(cran, last_date),
-        CRAN = .repositories_cran(cran)
+
+    old_opt <- .replace_repo(
+        version = version, last_date = last_date, snapshot = snapshot
     )
-    if (dry.run)
-        return(repos)
-    old_opt <- options(repos = repos["CRAN"])
     on.exit(options(old_opt))
+
     use_binaries <- Sys.getenv(
         "BIOCONDUCTOR_USE_CONTAINER_REPOSITORY", names = TRUE, unset = FALSE
     )
