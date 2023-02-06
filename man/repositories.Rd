@@ -7,7 +7,8 @@
 repositories(
   site_repository = character(),
   version = BiocManager::version(),
-  snapshot = getOption("BiocArchive.snapshot", "RSPM")
+  snapshot = getOption("BiocArchive.snapshot", "RSPM"),
+  lastBuilt = lastBuilt(version = version)
 )
 }
 \arguments{
@@ -24,6 +25,11 @@ repositories are required.}
 \item{snapshot}{\code{character(1)} The snapshot CRAN repository to use for
 reproducibility. This defaults to the value of
 \code{getOption("BiocArchive.snapshot", "RSPM")}.}
+
+\item{lastBuilt}{\verb{named character(1)} A character scalar of the date of the
+Bioconductor versions last build. The name corresponds to the Bioconductor
+version, e.g., \code{c('3.14' = "2022-04-13")}. By default, the \code{lastBuilt()}
+function reports the date from the value of the \code{version} argument.}
 }
 \value{
 A character vector of Bioconductor and CRAN repositories accounting
@@ -39,6 +45,11 @@ The CRAN repository reflects the \code{snapshot} arguments, which can be either
 \code{RSPM}, \code{MRAN}, or \code{CRAN}. The \code{CRAN} option will default to the established
 repository. For installation of archived packages on CRAN, see the
 \link{CRANinstall} function.
+
+When binary installations are enabled via
+\code{BIOCONDUCTOR_USE_CONTAINER_REPOSITORY}, the function will temporarily
+disable binary installation of packages. Bioconductor binary repositories may
+include CRAN packages that are not fixed to the release date.
 }
 \examples{
 if (interactive()) {

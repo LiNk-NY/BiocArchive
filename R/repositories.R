@@ -10,6 +10,11 @@
 #' repository. For installation of archived packages on CRAN, see the
 #' [CRANinstall] function.
 #'
+#' When binary installations are enabled via
+#' `BIOCONDUCTOR_USE_CONTAINER_REPOSITORY`, the function will temporarily
+#' disable binary installation of packages. Bioconductor binary repositories may
+#' include CRAN packages that are not fixed to the release date.
+#'
 #' @seealso [CRANinstall]
 #'
 #' @inheritParams BiocManager::repositories
@@ -28,13 +33,13 @@
 repositories <- function(
     site_repository = character(),
     version = BiocManager::version(),
-    snapshot = getOption("BiocArchive.snapshot", "RSPM")
+    snapshot = getOption("BiocArchive.snapshot", "RSPM"),
+    lastBuilt = lastBuilt(version = version)
 ) {
     repos <- getOption("repos")
-    last_date <- lastBuilt(version = version)
 
     old_opt <- .replace_repo(
-        version = version, last_date = last_date, snapshot = snapshot
+        version = version, last_date = lastBuilt, snapshot = snapshot
     )
     on.exit(options(old_opt))
 

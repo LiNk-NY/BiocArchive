@@ -25,18 +25,16 @@
 #' setting for `CRAN` to allow installation of CRAN packages from either the
 #' [RSPM] or [MRAN] time machines. The function will also modify the
 #' `BIOCONDUCTOR_USE_CONTAINER_REPOSITORY` environment variable to temporarily
-#' disable binary package installations. `BiocArchive.snapshot` has replaced
+#' disable binary package installations. This is due to the possibility of CRAN
+#' packages in the Bioconductor binary repositories that are not fixed to a
+#' certain release date. Note that `BiocArchive.snapshot` has replaced
 #' `BiocManager.snapshot`.
 #'
 #' It may be desirable to specify different default repositories, especially
 #' CRAN, for intentionally out-of-date _Bioconductor_ releases (e.g., to support
-#' reproducible research). Use the approach provided by base _R_ to specify
-#' alternative repositories, e.g., `options(repos = c(CRAN =
-#' "https://mran.microsoft.com/snapshot/2020-02-08"))`. This is supported, but
-#' generates an error because specification of an inappropriate CRAN repository
-#' (one providing packages not consistent with the dates of the _Bioconductor_
-#' release) results in use of CRAN packages not consistent with _Bioconductor_
-#' best practices.
+#' reproducible research). Our approach automatically provides an alteration to
+#' the `repos` option , e.g., `options(repos = c(CRAN =
+#' "https://mran.microsoft.com/snapshot/2020-02-08"))`.
 #'
 #' @inheritParams BiocManager::install
 #'
@@ -50,6 +48,13 @@
 #'
 #' @param dry.run `logical(1)` Whether to show only the time machine repository
 #'   and forgo the package installation.
+#'
+#' @param ... Additional parameters for the `BiocManager::install()` function
+#'
+#' @param lastBuilt `named character(1)` A character scalar of the date of the
+#'   Bioconductor versions last build. The name corresponds to the Bioconductor
+#'   version, e.g., `c('3.14' = "2022-04-13")`. By default, the `lastBuilt()`
+#'   function reports the date from the value of the `version` argument.
 #'
 #' @return Mostly called for the side-effects of copying and modifying the
 #'   `config.yaml` and `.Renviron` files to reproduce an R / Bioconductor
@@ -65,13 +70,13 @@ install <- function(
         version = BiocManager::version(),
         snapshot = getOption("BiocArchive.snapshot", "RSPM"),
         dry.run = FALSE,
-        ...
+        ...,
+        lastBuilt = lastBuilt(version = version)
 ) {
     repos <- getOption("repos")
-    last_date <- lastBuilt(version = version)
 
     old_opt <- .replace_repo(
-        version = version, last_date = last_date, snapshot = snapshot
+        version = version, last_date = lastBuilt, snapshot = snapshot
     )
     on.exit(options(old_opt))
 
@@ -90,11 +95,12 @@ install <- function(
     BiocManager::install(pkgs = pkgs, version = version, ...)
 }
 
-#' Install a package from the CRAN archive
+#' Install packages from the CRAN archive
 #'
-#' The function looks through the CRAN archive for a particular package
-#' and finds the version that is compatible with the archived Bioconductor
-#' version using the date of that version's last Bioconductor release.
+#' The function looks through the CRAN archive for each package and finds the
+#' package versions that are compatible with the archived Bioconductor version
+#' using the release date of that Bioconductor version as reported by
+#' `lastBuilt`.
 #'
 #' @inheritParams install
 #'
@@ -109,15 +115,15 @@ install <- function(
 #' CRANinstall(c("dplyr", "ggplot2"), version = "3.14", dry.run = TRUE)
 #'
 #' @export
-CRANinstall <-
-    function(pkgs, version = BiocManager::version(), dry.run = FALSE, ...)
-{
-    last_built <- lastBuilt(version = version)
+CRANinstall <- function(
+    pkgs, version = BiocManager::version(), dry.run = FALSE, ...,
+    lastBuilt = lastBuilt(version = version)
+) {
     dl_pkgs_dir <- file.path(tempdir(), "downloaded_packages")
     if (!dir.exists(dl_pkgs_dir))
         dir.create(dl_pkgs_dir)
     addArgs <- list(
-        last_built = last_built, temp_path = dl_pkgs_dir, dry.run = dry.run,
+        last_built = lastBuilt, temp_path = dl_pkgs_dir, dry.run = dry.run,
         ...
     )
     if (dry.run)
