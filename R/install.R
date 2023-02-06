@@ -117,13 +117,13 @@ install <- function(
 #' @export
 CRANinstall <- function(
     pkgs, version = BiocManager::version(), dry.run = FALSE, ...,
-    lastBuilt = lastBuilt(version = version)
+    last_built = lastBuilt(version = version)
 ) {
     dl_pkgs_dir <- file.path(tempdir(), "downloaded_packages")
     if (!dir.exists(dl_pkgs_dir))
         dir.create(dl_pkgs_dir)
     addArgs <- list(
-        last_built = lastBuilt, temp_path = dl_pkgs_dir, dry.run = dry.run,
+        last_built = last_built, temp_path = dl_pkgs_dir, dry.run = dry.run,
         ...
     )
     if (dry.run)

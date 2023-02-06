@@ -32,6 +32,8 @@
 }
 
 .resolve_archive <- function(pkg, last_built_date) {
+    if (is(last_built_date, "BiocBuild"))
+        last_built_date <- Date(last_built_date)
     repo_standin <- "https://cran.r-project.org/src/contrib/Archive"
     page <- rvest::read_html(paste(repo_standin, pkg, sep = "/"))
     table <- rvest::html_table(
