@@ -8,7 +8,7 @@ repositories(
   site_repository = character(),
   version = BiocManager::version(),
   snapshot = getOption("BiocArchive.snapshot", "RSPM"),
-  lastBuilt = lastBuilt(version = version)
+  last_built = lastBuilt(version = version)
 )
 }
 \arguments{
@@ -26,7 +26,7 @@ repositories are required.}
 reproducibility. This defaults to the value of
 \code{getOption("BiocArchive.snapshot", "RSPM")}.}
 
-\item{lastBuilt}{\verb{named character(1)} A character scalar of the date of the
+\item{last_built}{\verb{named character(1)} A character scalar of the date of the
 Bioconductor versions last build. The name corresponds to the Bioconductor
 version, e.g., \code{c('3.14' = "2022-04-13")}. By default, the \code{lastBuilt()}
 function reports the date from the value of the \code{version} argument.}

@@ -37,6 +37,11 @@ indicated by \code{BiocManager::version} by default.}
 
 \item{lastBuilt}{\code{Date(1)} or \code{character(1)} A scalar vector indicating the
 date of the last Bioconductor build.}
+
+\item{object}{A \code{BiocBuild} instance}
+
+\item{value}{\code{character(1)} The Bioconductor \code{version} desired. It is passed
+as input to \code{lastBuilt()}.}
 }
 \description{
 BiocBuild class for indicating Bioconductor build dates

@@ -51,7 +51,7 @@
 #'
 #' @param ... Additional parameters for the `BiocManager::install()` function
 #'
-#' @param lastBuilt `named character(1)` A character scalar of the date of the
+#' @param last_built `named character(1)` A character scalar of the date of the
 #'   Bioconductor versions last build. The name corresponds to the Bioconductor
 #'   version, e.g., `c('3.14' = "2022-04-13")`. By default, the `lastBuilt()`
 #'   function reports the date from the value of the `version` argument.
@@ -71,12 +71,12 @@ install <- function(
         snapshot = getOption("BiocArchive.snapshot", "RSPM"),
         dry.run = FALSE,
         ...,
-        lastBuilt = lastBuilt(version = version)
+        last_built = lastBuilt(version = version)
 ) {
     repos <- getOption("repos")
 
     old_opt <- .replace_repo(
-        version = version, last_date = lastBuilt, snapshot = snapshot
+        version = version, last_date = last_built, snapshot = snapshot
     )
     on.exit(options(old_opt))
 
