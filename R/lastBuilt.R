@@ -38,9 +38,12 @@ lastBuilt <- function(version = "all") {
     )
     last_bioc_dates <- format(lubridate::mdy(lastdates), "%Y-%m-%d")
     names(last_bioc_dates) <- names(lastdates)
-    if (identical(version, "all"))
+    if (identical(version, "all")) {
         version <- names(last_bioc_dates)
-    else
+        last_bioc_dates[version]
+    } else {
         version <- as.character(version)
-    last_bioc_dates[version]
+        bioc_date <- last_bioc_dates[version]
+        BiocBuild(version = names(bioc_date), lastBuilt = bioc_date)
+    }
 }
