@@ -1,49 +1,3 @@
-.RSPM_URL <- "https://packagemanager.rstudio.com/cran/"
-.MRAN_URL <- "https://mran.microsoft.com/snapshot/"
-.CRAN_URL <- "https://cloud.r-project.org/"
-
-.repositories_rspm <- function(cran, rspm_version) {
-    if (is.na(rspm_version)) {
-        cran
-    } else {
-        rspm_version <- as.Date(rspm_version, "%Y-%m-%d")
-        if (is.na(rspm_version))
-            stop("'RSPM' date format does not match '%Y-%m-%d'")
-        paste0(.RSPM_URL, rspm_version)
-    }
-}
-
-.repositories_mran <- function(cran, mran_version) {
-    if (is.na(mran_version)) {
-        cran
-    } else {
-        mran_version <- as.Date(mran_version, "%Y-%m-%d")
-        if (is.na(mran_version))
-            stop("'MRAN' date format does not match '%Y-%m-%d'")
-        paste0(.MRAN_URL, mran_version)
-    }
-}
-
-.repositories_cran <- function(cran) {
-    if (identical(cran, c(CRAN = "@CRAN@")) || is.na(cran))
-        .CRAN_URL
-    else
-        cran
-}
-
-.resolve_archive <- function(pkg, last_built_date) {
-    repo_standin <- "https://cran.r-project.org/src/contrib/Archive"
-    page <- rvest::read_html(paste(repo_standin, pkg, sep = "/"))
-    table <- rvest::html_table(
-        page, na.strings = c("NA", "", "-"), header = TRUE
-    )[[1]][, c("Name", "Last modified")]
-    latest <- lubridate::ymd(last_built_date) >=
-        lubridate::ymd_hm(table$`Last modified`)
-    indx <- max(which(latest))
-    archive <- unlist(table[indx, "Name"])
-    paste(repo_standin, pkg, archive, sep = "/")
-}
-
 #' Install packages from a previous release of Bioconductor for reproducibility
 #'
 #' This function allows users to install packages from a previously released
@@ -71,18 +25,16 @@
 #' setting for `CRAN` to allow installation of CRAN packages from either the
 #' [RSPM] or [MRAN] time machines. The function will also modify the
 #' `BIOCONDUCTOR_USE_CONTAINER_REPOSITORY` environment variable to temporarily
-#' disable binary package installations. `BiocArchive.snapshot` has replaced
+#' disable binary package installations. This is due to the possibility of CRAN
+#' packages in the Bioconductor binary repositories that are not fixed to a
+#' certain release date. Note that `BiocArchive.snapshot` has replaced
 #' `BiocManager.snapshot`.
 #'
 #' It may be desirable to specify different default repositories, especially
 #' CRAN, for intentionally out-of-date _Bioconductor_ releases (e.g., to support
-#' reproducible research). Use the approach provided by base _R_ to specify
-#' alternative repositories, e.g., `options(repos = c(CRAN =
-#' "https://mran.microsoft.com/snapshot/2020-02-08"))`. This is supported, but
-#' generates an error because specification of an inappropriate CRAN repository
-#' (one providing packages not consistent with the dates of the _Bioconductor_
-#' release) results in use of CRAN packages not consistent with _Bioconductor_
-#' best practices.
+#' reproducible research). Our approach automatically provides an alteration to
+#' the `repos` option , e.g., `options(repos = c(CRAN =
+#' "https://mran.microsoft.com/snapshot/2020-02-08"))`.
 #'
 #' @inheritParams BiocManager::install
 #'
@@ -97,13 +49,20 @@
 #' @param dry.run `logical(1)` Whether to show only the time machine repository
 #'   and forgo the package installation.
 #'
+#' @param ... Additional parameters for the `BiocManager::install()` function
+#'
+#' @param lastBuilt `named character(1)` A character scalar of the date of the
+#'   Bioconductor versions last build. The name corresponds to the Bioconductor
+#'   version, e.g., `c('3.14' = "2022-04-13")`. By default, the `lastBuilt()`
+#'   function reports the date from the value of the `version` argument.
+#'
 #' @return Mostly called for the side-effects of copying and modifying the
 #'   `config.yaml` and `.Renviron` files to reproduce an R / Bioconductor
 #'   package environment from a previous Bioconductor release.
 #'
 #' @examples
 #'
-#' install("DESeq2", version = "3.14", dry.run = TRUE)
+#' install("DESeq2", version = "3.14", snapshot = "RSPM", dry.run = TRUE)
 #'
 #' @export
 install <- function(
@@ -111,30 +70,19 @@ install <- function(
         version = BiocManager::version(),
         snapshot = getOption("BiocArchive.snapshot", "RSPM"),
         dry.run = FALSE,
-        ...
+        ...,
+        lastBuilt = lastBuilt(version = version)
 ) {
     repos <- getOption("repos")
-    last_date <- lastBuilt(version = version)
-    if (is.na(last_date))
-        stop("The 'version' ", version, " archive is not supported")
-    valid <- c("CRAN", "MRAN", "RSPM")
-    if (length(snapshot) != 1L || !snapshot %in% valid)
-        .stop(
-            "'getOption(\"BiocArchive.snapshot\")' must be one of %s",
-            paste0("'", valid, "'", collapse = " ")
-        )
-    cran <- repos["CRAN"]
-    rename <- repos == "@CRAN@" | names(repos) == "CRAN"
-    repos[rename] <- switch(
-        snapshot,
-        RSPM = .repositories_rspm(cran, last_date),
-        MRAN = .repositories_mran(cran, last_date),
-        CRAN = .repositories_cran(cran)
+
+    old_opt <- .replace_repo(
+        version = version, last_date = lastBuilt, snapshot = snapshot
     )
-    if (dry.run)
-        return(repos)
-    old_opt <- options(repos = repos["CRAN"])
     on.exit(options(old_opt))
+
+    if (dry.run)
+        return(getOption("repos"))
+
     use_binaries <- Sys.getenv(
         "BIOCONDUCTOR_USE_CONTAINER_REPOSITORY", names = TRUE, unset = FALSE
     )
@@ -147,11 +95,12 @@ install <- function(
     BiocManager::install(pkgs = pkgs, version = version, ...)
 }
 
-#' Install a package from the CRAN archive
+#' Install packages from the CRAN archive
 #'
-#' The function looks through the CRAN archive for a particular package
-#' and finds the version that is compatible with the archived Bioconductor
-#' version using the date of that version's last Bioconductor release.
+#' The function looks through the CRAN archive for each package and finds the
+#' package versions that are compatible with the archived Bioconductor version
+#' using the release date of that Bioconductor version as reported by
+#' `lastBuilt`.
 #'
 #' @inheritParams install
 #'
@@ -166,15 +115,15 @@ install <- function(
 #' CRANinstall(c("dplyr", "ggplot2"), version = "3.14", dry.run = TRUE)
 #'
 #' @export
-CRANinstall <-
-    function(pkgs, version = BiocManager::version(), dry.run = FALSE, ...)
-{
-    last_built <- lastBuilt(version = version)
+CRANinstall <- function(
+    pkgs, version = BiocManager::version(), dry.run = FALSE, ...,
+    lastBuilt = lastBuilt(version = version)
+) {
     dl_pkgs_dir <- file.path(tempdir(), "downloaded_packages")
     if (!dir.exists(dl_pkgs_dir))
         dir.create(dl_pkgs_dir)
     addArgs <- list(
-        last_built = last_built, temp_path = dl_pkgs_dir, dry.run = dry.run,
+        last_built = lastBuilt, temp_path = dl_pkgs_dir, dry.run = dry.run,
         ...
     )
     if (dry.run)

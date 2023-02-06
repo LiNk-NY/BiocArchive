@@ -2,9 +2,15 @@
 % Please edit documentation in R/install.R
 \name{CRANinstall}
 \alias{CRANinstall}
-\title{Install a package from the CRAN archive}
+\title{Install packages from the CRAN archive}
 \usage{
-CRANinstall(pkgs, version = BiocManager::version(), dry.run = FALSE, ...)
+CRANinstall(
+  pkgs,
+  version = BiocManager::version(),
+  dry.run = FALSE,
+  ...,
+  lastBuilt = lastBuilt(version = version)
+)
 }
 \arguments{
 \item{pkgs}{\code{character()} A vector of package names whose versions are sought
@@ -17,16 +23,22 @@ indicated by \code{BiocManager::version} by default.}
 \item{dry.run}{\code{logical(1)} Whether to show only the time machine repository
 and forgo the package installation.}
 
-\item{...}{Additional arguments used by \code{install.packages()}.}
+\item{...}{Additional parameters for the \code{BiocManager::install()} function}
+
+\item{lastBuilt}{\verb{named character(1)} A character scalar of the date of the
+Bioconductor versions last build. The name corresponds to the Bioconductor
+version, e.g., \code{c('3.14' = "2022-04-13")}. By default, the \code{lastBuilt()}
+function reports the date from the value of the \code{version} argument.}
 }
 \value{
 Mostly called for its side effect of installing the package from
 the CRAN archives that corresponds to the given Bioconductor version.
 }
 \description{
-The function looks through the CRAN archive for a particular package
-and finds the version that is compatible with the archived Bioconductor
-version using the date of that version's last Bioconductor release.
+The function looks through the CRAN archive for each package and finds the
+package versions that are compatible with the archived Bioconductor version
+using the release date of that Bioconductor version as reported by
+\code{lastBuilt}.
 }
 \examples{
 

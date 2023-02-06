@@ -11,7 +11,8 @@ install(
   version = BiocManager::version(),
   snapshot = getOption("BiocArchive.snapshot", "RSPM"),
   dry.run = FALSE,
-  ...
+  ...,
+  lastBuilt = lastBuilt(version = version)
 )
 }
 \arguments{
@@ -32,7 +33,12 @@ reproducibility. This defaults to the value of
 \item{dry.run}{\code{logical(1)} Whether to show only the time machine repository
 and forgo the package installation.}
 
-\item{...}{Additional arguments used by \code{install.packages()}.}
+\item{...}{Additional parameters for the \code{BiocManager::install()} function}
+
+\item{lastBuilt}{\verb{named character(1)} A character scalar of the date of the
+Bioconductor versions last build. The name corresponds to the Bioconductor
+version, e.g., \code{c('3.14' = "2022-04-13")}. By default, the \code{lastBuilt()}
+function reports the date from the value of the \code{version} argument.}
 }
 \value{
 Mostly called for the side-effects of copying and modifying the
@@ -58,20 +64,18 @@ Note that the function will temporarily change the \code{getOption('repos')}
 setting for \code{CRAN} to allow installation of CRAN packages from either the
 \href{https://packagemanager.rstudio.com/client/#/repos/2/overview}{RSPM} or \href{https://mran.microsoft.com/timemachine}{MRAN} time machines. The function will also modify the
 \code{BIOCONDUCTOR_USE_CONTAINER_REPOSITORY} environment variable to temporarily
-disable binary package installations. \code{BiocArchive.snapshot} has replaced
+disable binary package installations. This is due to the possibility of CRAN
+packages in the Bioconductor binary repositories that are not fixed to a
+certain release date. Note that \code{BiocArchive.snapshot} has replaced
 \code{BiocManager.snapshot}.
 
 It may be desirable to specify different default repositories, especially
 CRAN, for intentionally out-of-date \emph{Bioconductor} releases (e.g., to support
-reproducible research). Use the approach provided by base \emph{R} to specify
-alternative repositories, e.g., \code{options(repos = c(CRAN = "https://mran.microsoft.com/snapshot/2020-02-08"))}. This is supported, but
-generates an error because specification of an inappropriate CRAN repository
-(one providing packages not consistent with the dates of the \emph{Bioconductor}
-release) results in use of CRAN packages not consistent with \emph{Bioconductor}
-best practices.
+reproducible research). Our approach automatically provides an alteration to
+the \code{repos} option , e.g., \code{options(repos = c(CRAN = "https://mran.microsoft.com/snapshot/2020-02-08"))}.
 }
 \examples{
 
-install("DESeq2", version = "3.14", dry.run = TRUE)
+install("DESeq2", version = "3.14", snapshot = "RSPM", dry.run = TRUE)
 
 }
