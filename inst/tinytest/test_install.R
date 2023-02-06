@@ -18,13 +18,13 @@ last_built_date <- lastBuilt(version = version)
 
 expect_identical(
     install(version = version, dry.run = TRUE, snapshot = "RSPM"),
-    c(CRAN = paste0(BiocArchive:::.RSPM_URL, last_built_date))
+    c(CRAN = paste0(BiocArchive:::.RSPM_URL, Date(last_built_date)))
 )
 
 expect_identical(
     install(version = version, dry.run = TRUE, snapshot = "MRAN"),
     c(CRAN =
-        paste0(BiocArchive:::.MRAN_URL, last_built_date))
+        paste0(BiocArchive:::.MRAN_URL, Date(last_built_date)))
 )
 
 expect_identical(
