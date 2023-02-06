@@ -34,12 +34,12 @@ repositories <- function(
     site_repository = character(),
     version = BiocManager::version(),
     snapshot = getOption("BiocArchive.snapshot", "RSPM"),
-    lastBuilt = lastBuilt(version = version)
+    last_built = lastBuilt(version = version)
 ) {
     repos <- getOption("repos")
 
     old_opt <- .replace_repo(
-        version = version, last_date = lastBuilt, snapshot = snapshot
+        version = version, last_date = last_built, snapshot = snapshot
     )
     on.exit(options(old_opt))
 

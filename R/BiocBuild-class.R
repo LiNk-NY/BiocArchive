@@ -47,6 +47,8 @@ BiocBuild <-
 #'
 #' @importFrom methods show
 #'
+#' @param object A `BiocBuild` instance
+#'
 #' @export
 setMethod("show", "BiocBuild", function(object) {
     lastBuilt <- format(object@lastBuilt, "%B %d, %Y")
@@ -90,6 +92,9 @@ setGeneric("version<-", function(object, value) {
 })
 
 #' @describeIn BiocBuild-class Change the Bioconductor archive version
+#'
+#' @param value `character(1)` The Bioconductor `version` desired. It is passed
+#'   as input to `lastBuilt()`.
 #'
 #' @export
 setReplaceMethod("version", "BiocBuild", function(object, value) {

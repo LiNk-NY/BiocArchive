@@ -24,6 +24,11 @@ indicated by \code{BiocManager::version} by default.}
 and forgo the package installation.}
 
 \item{...}{Additional parameters for the \code{BiocManager::install()} function}
+
+\item{last_built}{\verb{named character(1)} A character scalar of the date of the
+Bioconductor versions last build. The name corresponds to the Bioconductor
+version, e.g., \code{c('3.14' = "2022-04-13")}. By default, the \code{lastBuilt()}
+function reports the date from the value of the \code{version} argument.}
 }
 \value{
 Mostly called for its side effect of installing the package from
