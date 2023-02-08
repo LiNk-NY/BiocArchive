@@ -14,3 +14,8 @@ expect_identical(
     lastBuilt("3.14"),
     BiocBuild(version = "3.14", buildDate = "2022-04-13")
 )
+
+expect_identical(
+    lastBuilt("3.11"),
+    BiocBuild(version = "3.11", buildDate = "2020-10-17")
+)
