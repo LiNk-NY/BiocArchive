@@ -6,21 +6,21 @@
 \alias{.BiocBuild}
 \alias{BiocBuild}
 \alias{show,BiocBuild-method}
-\alias{Date}
-\alias{Date,BiocBuild-method}
+\alias{buildDate}
+\alias{buildDate,BiocBuild-method}
 \alias{version}
 \alias{version,BiocBuild-method}
 \alias{version<-}
 \alias{version<-,BiocBuild-method}
 \title{BiocBuild class for indicating Bioconductor build dates}
 \usage{
-BiocBuild(version = BiocManager::version(), lastBuilt = Sys.Date())
+BiocBuild(version = BiocManager::version(), buildDate = Sys.Date())
 
 \S4method{show}{BiocBuild}(object)
 
-Date(object)
+buildDate(object)
 
-\S4method{Date}{BiocBuild}(object)
+\S4method{buildDate}{BiocBuild}(object)
 
 version(object)
 
@@ -35,13 +35,13 @@ version(object) <- value
 largely dictated by the current R / Bioconductor version installed and is
 indicated by \code{BiocManager::version} by default.}
 
-\item{lastBuilt}{\code{Date(1)} or \code{character(1)} A scalar vector indicating the
+\item{buildDate}{\code{Date(1)} or \code{character(1)} A scalar vector indicating the
 date of the last Bioconductor build.}
 
 \item{object}{A \code{BiocBuild} instance}
 
 \item{value}{\code{character(1)} The Bioconductor \code{version} desired. It is passed
-as input to \code{lastBuilt()}.}
+as input to \code{buildDate()}.}
 }
 \description{
 BiocBuild class for indicating Bioconductor build dates
@@ -50,7 +50,8 @@ BiocBuild class for indicating Bioconductor build dates
 \itemize{
 \item \code{show(BiocBuild)}: The standard \code{show} method for \code{BiocBuild}
 
-\item \code{Date(BiocBuild)}: Extract the \code{Date} from \code{BiocBuild} objects
+\item \code{buildDate(BiocBuild)}: Extract the \code{buildDate} date from \code{BiocBuild}
+objects
 
 \item \code{version(BiocBuild)}: Obtain the Bioconductor version from a
 \code{BiocBuild} object
@@ -64,13 +65,13 @@ BiocBuild class for indicating Bioconductor build dates
 \item{\code{version}}{A \code{package_version} class indicating the Bioconductor
 version}
 
-\item{\code{lastBuilt}}{The date of the Bioconductor release as a \code{Date} class}
+\item{\code{buildDate}}{The date of the Bioconductor release as a \code{Date} class}
 }}
 
 \examples{
 
-BB <- BiocBuild(version = "3.14", lastBuilt = "2022-04-13")
-Date(BB)
+BB <- BiocBuild(version = "3.14", buildDate = "2022-04-13")
+buildDate(BB)
 version(BB)
 
 version(BB) <- "3.13"
