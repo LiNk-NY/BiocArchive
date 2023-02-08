@@ -44,6 +44,6 @@ lastBuilt <- function(version = "all") {
     } else {
         version <- as.character(version)
         bioc_date <- last_bioc_dates[version]
-        BiocBuild(version = names(bioc_date), lastBuilt = unname(bioc_date))
+        BiocBuild(version = names(bioc_date), buildDate = unname(bioc_date))
     }
 }

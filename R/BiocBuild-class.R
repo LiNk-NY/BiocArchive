@@ -5,26 +5,26 @@ setOldClass("package_version")
 #' @slot version A `package_version` class indicating the Bioconductor
 #'   version
 #'
-#' @slot lastBuilt The date of the Bioconductor release as a `Date` class
+#' @slot buildDate The date of the Bioconductor release as a `Date` class
 #'
 #' @importFrom methods new
 #'
 #' @exportClass BiocBuild
 .BiocBuild <- setClass(
-   "BiocBuild", slots = c(version = "package_version", lastBuilt = "Date")
+   "BiocBuild", slots = c(version = "package_version", buildDate = "Date")
 )
 
 #' @rdname BiocBuild-class
 #'
 #' @inheritParams install
 #'
-#' @param lastBuilt `Date(1)` or `character(1)` A scalar vector indicating the
+#' @param buildDate `Date(1)` or `character(1)` A scalar vector indicating the
 #'   date of the last Bioconductor build.
 #'
 #' @examples
 #'
-#' BB <- BiocBuild(version = "3.14", lastBuilt = "2022-04-13")
-#' Date(BB)
+#' BB <- BiocBuild(version = "3.14", buildDate = "2022-04-13")
+#' buildDate(BB)
 #' version(BB)
 #'
 #' version(BB) <- "3.13"
@@ -32,15 +32,15 @@ setOldClass("package_version")
 #'
 #' @export
 BiocBuild <-
-    function(version = BiocManager::version(), lastBuilt = Sys.Date())
+    function(version = BiocManager::version(), buildDate = Sys.Date())
 {
-    if (!identical(length(version), 1L) || !identical(length(lastBuilt), 1L))
-        stop("'version' and 'lastBuilt' must be of length 1")
-    if (is.na(lastBuilt) || is.na(version))
-        stop("'version' or 'lastBuilt' cannot be 'NA'")
+    if (!identical(length(version), 1L) || !identical(length(buildDate), 1L))
+        stop("'version' and 'buildDate' must be of length 1")
+    if (is.na(buildDate) || is.na(version))
+        stop("'version' or 'buildDate' cannot be 'NA'")
     version <- as.package_version(version)
-    built <- as.Date(lastBuilt)
-    .BiocBuild(version = version, lastBuilt = built)
+    built <- as.Date(buildDate)
+    .BiocBuild(version = version, buildDate = built)
 }
 
 #' @describeIn BiocBuild-class The standard `show` method for `BiocBuild`
@@ -51,25 +51,26 @@ BiocBuild <-
 #'
 #' @export
 setMethod("show", "BiocBuild", function(object) {
-    lastBuilt <- format(object@lastBuilt, "%B %d, %Y")
+    buildDate <- format(object@buildDate, "%B %d, %Y")
     version <- as.character(object@version)
     cat(
-        "Bioconductor version '", version, "' built on '", lastBuilt, "'.",
+        "Bioconductor version '", version, "' built on '", buildDate, "'.",
         sep = ""
     )
 })
 
 #' @rdname BiocBuild-class
 #' @export
-setGeneric("Date", function(object) {
-    standardGeneric("Date")
+setGeneric("buildDate", function(object) {
+    standardGeneric("buildDate")
 })
 
-#' @describeIn BiocBuild-class Extract the `Date` from `BiocBuild` objects
+#' @describeIn BiocBuild-class Extract the `buildDate` date from `BiocBuild`
+#'   objects
 #'
 #' @export
-setMethod("Date", "BiocBuild", function(object) {
-    object@lastBuilt
+setMethod("buildDate", "BiocBuild", function(object) {
+    object@buildDate
 })
 
 #' @rdname BiocBuild-class
@@ -94,7 +95,7 @@ setGeneric("version<-", function(object, value) {
 #' @describeIn BiocBuild-class Change the Bioconductor archive version
 #'
 #' @param value `character(1)` The Bioconductor `version` desired. It is passed
-#'   as input to `lastBuilt()`.
+#'   as input to `buildDate()`.
 #'
 #' @export
 setReplaceMethod("version", "BiocBuild", function(object, value) {
@@ -102,6 +103,6 @@ setReplaceMethod("version", "BiocBuild", function(object, value) {
     BiocBaseUtils::setSlots(
         object,
         version = lab@version,
-        lastBuilt = lab@lastBuilt
+        buildDate = lab@buildDate
     )
 })
