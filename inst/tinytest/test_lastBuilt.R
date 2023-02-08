@@ -12,5 +12,5 @@ expect_true(
 # lastBuilt returns a character string with a name
 expect_identical(
     lastBuilt("3.14"),
-    BiocBuild(version = "3.14", lastBuilt = "2022-04-13")
+    BiocBuild(version = "3.14", buildDate = "2022-04-13")
 )
