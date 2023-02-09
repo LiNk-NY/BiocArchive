@@ -100,7 +100,7 @@ setGeneric("version<-", function(object, value) {
 #' @export
 setReplaceMethod("version", "BiocBuild", function(object, value) {
     lab <- lastBuilt(value)
-    BiocBaseUtils::setSlots(
+    .replaceSlots(
         object,
         version = lab@version,
         buildDate = lab@buildDate

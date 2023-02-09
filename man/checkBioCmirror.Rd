@@ -35,7 +35,9 @@ the name.
 The function checks the \code{PACKAGES} file with \code{RCurl::url.exists}.
 }
 \examples{
+
 bioc_url <- "https://bioconductor.org"
 bioc_mirror <- c(`0-Bioconductor (World-wide) [https]` = bioc_url)
 checkBioCmirror(mirror = bioc_mirror)
+
 }

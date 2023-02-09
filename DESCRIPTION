@@ -12,7 +12,6 @@ Description: Install older versions of Bioconductor based on the R version
   from either an MRAN or RSPM snapshot. These snapshots will conincide with
   the last built date of the requested Bioconductor version.
 Imports:
-  BiocBaseUtils,
   BiocManager,
   methods,
   memoise,
