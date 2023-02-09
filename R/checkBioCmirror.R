@@ -21,9 +21,11 @@
 #'   the name.
 #'
 #' @examples
+#'
 #' bioc_url <- "https://bioconductor.org"
 #' bioc_mirror <- c(`0-Bioconductor (World-wide) [https]` = bioc_url)
 #' checkBioCmirror(mirror = bioc_mirror)
+#'
 #' @export
 checkBioCmirror <- function(
     mirror = getOption("BioC_mirror"),
