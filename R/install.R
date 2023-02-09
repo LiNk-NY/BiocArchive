@@ -145,5 +145,5 @@ CRANinstall <- function(
     pkg_arch <- basename(arch_url)
     pkg_file <- file.path(temp_path, pkg_arch)
     utils::download.file(arch_url, pkg_file)
-    utils::install.packages(temp_path, repos = NULL, type = "source", ...)
+    utils::install.packages(pkg_file, repos = NULL, type = "source", ...)
 }
