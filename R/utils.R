@@ -31,20 +31,50 @@
         cran
 }
 
+.get_cran_table <- function(link, header = TRUE) {
+    page <- rvest::read_html(link)
+    rvest::html_table(
+        page, na.strings = c("NA", "", "-"), header = header
+    )[[1]]
+}
+
+.CRAN_ARCHIVE_REPOSITORY <- "https://cran.r-project.org/src/contrib/Archive"
+
+.get_best_link <- function(pkg, last_built_date, arch_candidate, latest) {
+    archive_link <-
+        paste(.CRAN_ARCHIVE_REPOSITORY, pkg, arch_candidate, sep = "/")
+    if (!all(latest))
+        return(archive_link)
+    can_link <- "https://cran.r-project.org/package="
+    pkg_link <- paste0(can_link, pkg)
+    table <- .get_cran_table(pkg_link, header = FALSE)
+    date_pub <- table[table[[1L]] == "Published:", 2L, drop = TRUE]
+    pkg_version <- table[table[[1L]] == "Version:", 2L, drop = TRUE]
+    pub_latest <- lubridate::ymd(last_built_date) >=
+        lubridate::ymd(date_pub)
+    if (pub_latest)
+        paste0(
+            "https://cran.r-project.org/src/contrib/",
+            pkg, "_", pkg_version, ".tar.gz"
+        )
+    else
+        archive_link
+}
+
 #' @importFrom methods is
 .resolve_archive <- function(pkg, last_built_date) {
     if (is(last_built_date, "BiocBuild"))
         last_built_date <- buildDate(last_built_date)
-    repo_standin <- "https://cran.r-project.org/src/contrib/Archive"
-    page <- rvest::read_html(paste(repo_standin, pkg, sep = "/"))
-    table <- rvest::html_table(
-        page, na.strings = c("NA", "", "-"), header = TRUE
-    )[[1]][, c("Name", "Last modified")]
+    repo_link <- paste(.CRAN_ARCHIVE_REPOSITORY, pkg, sep = "/")
+    table <-
+        .get_cran_table(repo_link, header = TRUE)[, c("Name", "Last modified")]
+    table <- table[stats::complete.cases(table), ]
+    table <- table[order(table[['Last modified']]), ]
     latest <- lubridate::ymd(last_built_date) >=
         lubridate::ymd_hm(table$`Last modified`)
     indx <- max(which(latest))
-    archive <- unlist(table[indx, "Name"])
-    paste(repo_standin, pkg, archive, sep = "/")
+    arch_candidate <- unlist(table[indx, "Name"])
+    .get_best_link(pkg, last_built_date, arch_candidate, latest)
 }
 
 .replace_repo <-

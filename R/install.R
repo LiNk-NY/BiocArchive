@@ -138,12 +138,76 @@ CRANinstall <- function(
     )
 }
 
+## look into DESC file and get deps for installation
+base_installed <- c(
+    "base", "boot", "class", "cluster", "codetools", "compiler",
+    "datasets", "foreign", "graphics", "grDevices", "grid", "KernSmooth",
+    "lattice", "MASS", "Matrix", "methods", "mgcv", "nlme", "nnet",
+    "parallel", "rpart", "spatial", "splines", "stats", "stats4",
+    "survival", "tcltk", "tools", "translations", "utils"
+)
+
+.install_file_msg <- function(pkg_file) {
+    old_fq <- options(useFancyQuotes = FALSE)
+    on.exit(options(old_fq))
+    cmd0 <- system2("which", "R", stdout = TRUE)
+    result <- suppressWarnings({
+        system2(
+            command = cmd0,
+            args = c("CMD", "INSTALL", "-l", .libPaths()[1], shQuote(pkg_file)),
+            stderr = TRUE
+        )
+    })
+    if (any(grepl("^ERROR: dep", result))) {
+        if (grepl("', '", result[1]))
+            pkgs <- gsub("ERROR: dependencies (.*) are not.*", "\\1", result[1])
+        else
+            pkgs <- gsub("ERROR: dependency (.*) is not.*", "\\1", result[1])
+        fmt <- '  BiocArchive::CRANinstall(%s)'
+        fmt <- sprintf(fmt, 'c(\n    %s\n  )')
+        cat(
+            "\nInstall package dependencies with",
+            "\n", sprintf(fmt, pkgs), "\n",
+            sep = ""
+        )
+    }
+}
+
+.get_DESC_deps <- function(tarball, pkg, temp_path) {
+    untar(tarball, files = file.path(pkg, "DESCRIPTION"), exdir = temp_path)
+    deps <- read.dcf(
+        file = file.path(temp_path, pkg, "DESCRIPTION"),
+        fields = c("Depends", "Imports", "LinkingTo")
+    )
+    deps <- unlist(lapply(deps, strsplit, ",\\s+"))
+    Filter(Negate(is.na), deps)
+}
+
 .install_one <- function(pkg, last_built, temp_path, dry.run, ...) {
     arch_url <- .resolve_archive(pkg, last_built)
     if (dry.run)
         return(message(arch_url))
     pkg_arch <- basename(arch_url)
     pkg_file <- file.path(temp_path, pkg_arch)
-    utils::download.file(arch_url, pkg_file)
-    utils::install.packages(pkg_file, repos = NULL, type = "source", ...)
+    if (!file.exists(pkg_file))
+        utils::download.file(arch_url, pkg_file)
+
+    deps <- .get_DESC_deps(pkg_file, pkg, temp_path)
+    if (length(deps)) {
+        pkgs <- vapply(deps, function(s) {
+            gsub("([[:alnum:]])\\s+\\(+.*$", "\\1", s)
+        }, character(1L))
+        to_inst <- Filter(function(x) {!x %in% c("R", base_installed)}, pkgs)
+        inst_pkgs <- rownames(installed.packages())
+        missing_pkg <- !to_inst %in% inst_pkgs
+        if (any(missing_pkg))
+            CRANinstall(to_inst[missing_pkg], dry.run = dry.run)
+    }
+    withCallingHandlers({
+        tryCatch({
+            install.packages(pkg_file, repos = NULL, type = "source")
+        }, error = function(e) {
+            conditionMessage(e)
+        })
+    }, warning = .install_file_msg(pkg_file))
 }
