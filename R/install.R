@@ -127,7 +127,7 @@ CRANinstall <- function(
         ...
     )
     if (dry.run)
-        pkgs <- unique(c(utils::head(pkgs, 1), utils::tail(pkgs, 1)))
+        pkgs <- unique(c(utils::head(pkgs, 1), "...", utils::tail(pkgs, 1)))
     mapply(
         .install_one, pkg = pkgs, MoreArgs = addArgs, SIMPLIFY = FALSE
     )
@@ -184,6 +184,8 @@ base_installed <- c(
 }
 
 .install_one <- function(pkg, last_built, temp_path, dry.run, ...) {
+    if (identical(pkg, "..."))
+        return(message(pkg))
     arch_url <- .resolve_archive(pkg, last_built)
     if (dry.run)
         return(message(arch_url))

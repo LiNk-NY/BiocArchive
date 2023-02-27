@@ -40,3 +40,25 @@ expect_identical(
     BiocArchive:::.resolve_archive("rvest", last_built_date),
     "https://cran.r-project.org/src/contrib/Archive/rvest/rvest_1.0.2.tar.gz"
 )
+
+# CRANinstall
+
+version <- "0.99"
+expect_error(
+    CRANinstall("ggplot2", version = version, dry.run = TRUE)
+)
+expect_error(
+    CRANinstall("ggplot2", version = NA, dry.run = TRUE)
+)
+
+expect_message(
+    CRANinstall("ggplot2", version = "3.14", dry.run = TRUE),
+    "https://cran.r-project.org/.*"
+)
+
+expect_message(
+    CRANinstall(
+        c("ggplot2", "dplyr", "tidyr"), version = "3.14", dry.run = TRUE,
+        "..."
+    )
+)
