@@ -147,17 +147,21 @@ base_installed <- c(
     "survival", "tcltk", "tools", "translations", "utils"
 )
 
-.install_file_msg <- function(pkg_file) {
-    old_fq <- options(useFancyQuotes = FALSE)
-    on.exit(options(old_fq))
+.sys_install_pkg <- function(pkg_file) {
     cmd0 <- system2("which", "R", stdout = TRUE)
-    result <- suppressWarnings({
+    suppressWarnings({
         system2(
             command = cmd0,
             args = c("CMD", "INSTALL", "-l", .libPaths()[1], shQuote(pkg_file)),
             stderr = TRUE
         )
     })
+}
+
+.install_file_msg <- function(pkg_file) {
+    old_fq <- options(useFancyQuotes = FALSE)
+    on.exit(options(old_fq))
+    result <- .sys_install_pkg(pkg_file)
     if (any(grepl("^ERROR: dep", result))) {
         if (grepl("', '", result[1]))
             pkgs <- gsub("ERROR: dependencies (.*) are not.*", "\\1", result[1])

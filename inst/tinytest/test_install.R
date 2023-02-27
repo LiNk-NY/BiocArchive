@@ -62,3 +62,25 @@ expect_message(
         "..."
     )
 )
+
+orig <- BiocArchive:::.sys_install_pkg
+
+.sys_install_pkg <- function(...) {
+    "ERROR: dependency 'scales' is not available."
+}
+
+.install_file_msg <- BiocArchive:::.install_file_msg
+
+assignInNamespace(".sys_install_pkg", .sys_install_pkg, "BiocArchive")
+
+expect_match(
+    paste(
+        capture.output(
+            .install_file_msg("./testpkg_x.y.z.tar.gz")
+        ),
+        collapse = ""
+    ),
+    ".*BiocArchive::CRANinstall.*'scales'.*"
+)
+
+assignInNamespace(".sys_install_pkg", orig, "BiocArchive")
