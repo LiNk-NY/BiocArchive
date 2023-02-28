@@ -27,7 +27,7 @@ R version installation and install the package via GitHub or via source.
 
 Currently, it is available via GitHub. 
 
-```{r}
+```{r,eval=FALSE}
 if (!requireNamespace("BiocManager", quietly = TRUE))
     install.packages("BiocManager")
 
