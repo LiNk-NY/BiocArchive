@@ -1,6 +1,6 @@
 .RSPM_URL <- "https://packagemanager.rstudio.com/cran/"
 .MRAN_URL <- "https://mran.microsoft.com/snapshot/"
-.CRAN_URL <- "https://cloud.r-project.org/"
+.CRAN_URL <- "https://cloud.r-project.org"
 
 .repositories_rspm <- function(cran, rspm_version) {
     if (is.na(rspm_version)) {
@@ -144,7 +144,7 @@ repo_short_names <- data.frame(
     )
     object <- .unsafe_replaceSlots(object, ...)
     if (check)
-        validObject(object)
+        methods::validObject(object)
     object
 }
 
@@ -153,7 +153,7 @@ repo_short_names <- data.frame(
     slot_names <- names(slots)
     for (i in seq_along(slots)) {
         slot_name <- slot_names[[i]]
-        slot(object, slot_name, check = FALSE) <- slots[[i]]
+        methods::slot(object, slot_name, check = FALSE) <- slots[[i]]
     }
     object
 }

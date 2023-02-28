@@ -17,7 +17,6 @@ Imports:
   memoise,
   RCurl,
   rvest,
-  stats,
   utils,
   xml2
 Suggests:

@@ -178,7 +178,9 @@ base_installed <- c(
 }
 
 .get_DESC_deps <- function(tarball, pkg, temp_path) {
-    untar(tarball, files = file.path(pkg, "DESCRIPTION"), exdir = temp_path)
+    utils::untar(
+        tarball, files = file.path(pkg, "DESCRIPTION"), exdir = temp_path
+    )
     deps <- read.dcf(
         file = file.path(temp_path, pkg, "DESCRIPTION"),
         fields = c("Depends", "Imports", "LinkingTo")
@@ -204,14 +206,14 @@ base_installed <- c(
             gsub("([[:alnum:]])\\s+\\(+.*$", "\\1", s)
         }, character(1L))
         to_inst <- Filter(function(x) {!x %in% c("R", base_installed)}, pkgs)
-        inst_pkgs <- rownames(installed.packages())
+        inst_pkgs <- rownames(utils::installed.packages())
         missing_pkg <- !to_inst %in% inst_pkgs
         if (any(missing_pkg))
             CRANinstall(to_inst[missing_pkg], dry.run = dry.run)
     }
     withCallingHandlers({
         tryCatch({
-            install.packages(pkg_file, repos = NULL, type = "source")
+            utils::install.packages(pkg_file, repos = NULL, type = "source")
         }, error = function(e) {
             conditionMessage(e)
         })
