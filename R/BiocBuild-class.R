@@ -7,6 +7,8 @@ setOldClass("package_version")
 #'
 #' @slot buildDate The date of the Bioconductor release as a `Date` class
 #'
+#' @return A `BiocBuild` class instance
+#'
 #' @importFrom methods new
 #'
 #' @exportClass BiocBuild

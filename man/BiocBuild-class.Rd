@@ -43,6 +43,9 @@ date of the last Bioconductor build.}
 \item{value}{\code{character(1)} The Bioconductor \code{version} desired. It is passed
 as input to \code{buildDate()}.}
 }
+\value{
+A \code{BiocBuild} class instance
+}
 \description{
 BiocBuild class for indicating Bioconductor build dates
 }

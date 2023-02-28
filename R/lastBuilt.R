@@ -11,6 +11,9 @@
 #' @importFrom rvest html_nodes html_text
 #' @importFrom xml2 read_html xml_find_all
 #'
+#' @return When version is specified, a `BiocBuild` class instance for that
+#'   version
+#'
 #' @examples
 #'
 #' lastBuilt(version = "3.14")
