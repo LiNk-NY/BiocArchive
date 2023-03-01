@@ -13,7 +13,7 @@ setOldClass("package_version")
 #'
 #' @exportClass BiocBuild
 .BiocBuild <- setClass(
-   "BiocBuild", slots = c(version = "package_version", buildDate = "Date")
+    "BiocBuild", slots = c(version = "package_version", buildDate = "Date")
 )
 
 #' @rdname BiocBuild-class
