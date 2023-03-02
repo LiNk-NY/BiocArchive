@@ -18,9 +18,9 @@
 #'   all packages ('pkgs') are up to date, then `TRUE` is returned.
 #'
 #' @examples
-#'
-#' valid()
-#'
+#' if (interactive()) {
+#'   valid()
+#' }
 #' @export
 valid <- function(
     pkgs = utils::installed.packages(lib.loc, priority = priority),

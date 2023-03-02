@@ -75,7 +75,7 @@ by the \code{repositories()} function. There is no reliable way to verify
 \code{dry.run = TRUE} parameter and manually comparing versions.
 }
 \examples{
-
-valid()
-
+if (interactive()) {
+  valid()
+}
 }
