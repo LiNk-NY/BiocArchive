@@ -126,8 +126,9 @@ CRANinstall <- function(
         last_built = last_built, temp_path = dl_pkgs_dir, dry.run = dry.run,
         ...
     )
-    if (dry.run)
-        pkgs <- unique(c(utils::head(pkgs, 1), "...", utils::tail(pkgs, 1)))
+    pkgs <- unique(pkgs)
+    if (dry.run && length(pkgs) > 1L)
+        pkgs <- c(utils::head(pkgs, 1L), "...", utils::tail(pkgs, 1L))
     mapply(
         .install_one, pkg = pkgs, MoreArgs = addArgs, SIMPLIFY = FALSE
     )
