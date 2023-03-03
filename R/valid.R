@@ -27,8 +27,10 @@ valid <- function(
     lib.loc = NULL, priority = "NA", type = getOption("pkgType"),
     filters = NULL,
     ...,
-    checkBuilt = FALSE, site_repository = character(),
-    version = BiocManager::version(), last_built = lastBuilt(version = version),
+    checkBuilt = FALSE,
+    site_repository = character(),
+    version = BiocManager::version(),
+    last_built = lastBuilt(version = version),
     snapshot = getOption("BiocArchive.snapshot", "RSPM")
 ) {
     repos <- getOption("repos")
