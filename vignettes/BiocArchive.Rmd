@@ -12,11 +12,15 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-# Introduction
+```{r, setup, include=FALSE}
+knitr::opts_chunk$set(cache = TRUE)
+```
+
+# BiocArchive
 
 `BiocArchive` is a package dedicated to preserving reproducibility with older
-Bioconductor versions. It only works on older Bioconductor releases such
-as `3.14`. Note that users must have the proper `3.14` setup to be able
+Bioconductor versions. It works for older Bioconductor releases, for example
+version `3.14`. Note that users must have the proper `3.14` setup to be able
 to install packages from the archive. This means that users should be running
 R version `4.1`.
 
@@ -31,7 +35,7 @@ Currently, it is available via GitHub.
 if (!requireNamespace("BiocManager", quietly = TRUE))
     install.packages("BiocManager")
 
-BiocManager::install("LiNk-NY/BiocArchive")
+BiocManager::install("waldronlab/BiocArchive")
 ```
 
 # Last release version
@@ -46,14 +50,28 @@ lastBuilt(version = "3.14")
 
 # Archived installations
 
-To install Bioconductor packages, it is minimally required that the user
-install via `BiocManager` on the docker container. The added value that
-BiocArchive provides is that it provides versioned installations of CRAN
-packages from either the RStudio Package Manager (`RSPM`) or the Microsoft R
-Archive Network (`MRAN`).
+To install Bioconductor packages from previous releases, we strongly recommend
+using Bioconductor Docker containers, where possible. Such containers will have 
+`BiocManager` installed. `BiocArchive` allows versioned installations of
+[CRAN](https://cran.r-project.org/) packages from either the RStudio Package
+Manager (`RSPM`) or the Microsoft R Archive Network (`MRAN`) or the CRAN
+[archive](https://cran.r-project.org/src/contrib/Archive/).
 
-Bioconductor installations should work as normal as if one were installing the
-package via `BiocManager` within the legacy `3.14` container.
+## Docker installation
+
+To download the Docker container, one can run the docker command: 
+
+```
+docker pull bioconductor/bioconductor_docker:RELEASE_3_14
+```
+
+For more information, see the Docker for Bioconductor page: 
+https://www.bioconductor.org/help/docker/
+
+## Bioconductor installations
+
+Installations of Bioconductor packages are handled by `BiocManager` and will
+work as normal within a legacy container or local installation. 
 
 ```{r}
 install("DESeq2", version = "3.14", dry.run = TRUE)
@@ -61,20 +79,65 @@ install("DESeq2", version = "3.14", dry.run = TRUE)
 install("MultiAssayExperiment", version = "3.14", dry.run = TRUE)
 ```
 
+__Note__. The `dry.run` argument returns the `CRAN` repository location. The
+default is to install `CRAN` packages from the RSPM snapshot repository.
+
+# RSPM and MRAN installations
+
+The [RStudio Package Manager](https://packagemanager.rstudio.com/client/)
+(`RSPM`) and the [Microsoft R Archive Network](https://mran.microsoft.com/)
+(MRAN) allows installations of packages from their respective snapshot
+repositories. To enable installation from these repositories, users must either
+set their `getOption("BiocArchive.snapshot")` option or the `snapshot` argument
+to either `RSPM` or `MRAN`. By default, the package uses `RSPM` snapshots tied
+to the last build date of the Bioconductor version.
+
+```{r}
+install("DESeq2", version = "3.14", dry.run = TRUE, snapshot = "MRAN")
+
+install(
+    "MultiAssayExperiment", version = "3.14", dry.run = TRUE, snapshot = "MRAN"
+)
+```
+
+
 # CRAN installations from the source archive
 
 Packages on CRAN have a history of versions at a particular URL location:
 
 <https://cran.r-project.org/src/contrib/Archive>
 
-A CRAN package from the archive can be installed using `CRANinstall`:
+A CRAN package from the archive can be installed (from source) using
+`CRANinstall`:
 
 ```{r}
 CRANinstall("dplyr", "3.14", dry.run = TRUE)
 ```
 
-Note that this method only works on one package at a time. Future support
-will allow installations for multiple packages at a time. 
+The function will attempt to satisfy all dependencies from the CRAN archive.
+
+# Repository URLs
+
+To see the list of active repositories based on option configurations,
+use the `repositories()` function:
+
+```{r,eval=FALSE}
+repositories(version = "3.14")
+```
+
+__Note__. The R version must coincide with the Bioconductor version sought.
+
+# Package validity
+
+To check whether all packages are within the valid time interval of the
+Bioconductor release, the `valid()` function will compare package versions
+with those in either the `RSPM` or `MRAN` repository.
+
+```{r,eval=FALSE}
+valid(version = "3.14")
+```
+
+__Note__. The R version must coincide with the Bioconductor version sought.
 
 # Session Information
 
