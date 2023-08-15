@@ -1,4 +1,4 @@
-rspm <- "https://packagemanager.rstudio.com/cran"
+rspm <- "https://packagemanager.posit.co/cran"
 expect_identical(
     BiocArchive:::.repositories_rspm(rspm, NA),
     rspm
@@ -6,15 +6,6 @@ expect_identical(
 expect_error(
     BiocArchive:::.repositories_rspm(rspm, "0000-00-00")
 )
-mran <- "https://mran.microsoft.com/snapshot/"
-expect_identical(
-    BiocArchive:::.repositories_mran(mran, NA),
-    mran
-)
-expect_error(
-    BiocArchive:::.repositories_mran(mran, "123090394")
-)
-
 cran <- c(CRAN = "@CRAN@")
 expect_identical(
     BiocArchive:::.repositories_cran(cran),

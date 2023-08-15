@@ -14,16 +14,14 @@
 #' _Bioconductor_ version 3.11 was current until October 28, 2020; CRAN packages
 #' are therefore installed from a snapshot created on 2020-10-28. By default,
 #' the snapshots are from 'RSPM', the [RStudio Package Manager][RSPM]. Use
-#' `options(BiocArchive.snapshot = "MRAN")` to instead use the [Microsoft R
-#' Archive Network][MRAN], or `options(BiocArchive.snapshot = "CRAN")` to use
-#' the current CRAN repository (i.e., disabling the snapshot feature).
+#' `options(BiocArchive.snapshot = "CRAN")` to use the current CRAN repository
+#' (i.e., disabling the snapshot feature).
 #'
-#' [MRAN]: https://mran.microsoft.com/timemachine
-#' [RSPM]: https://packagemanager.rstudio.com/client/#/repos/2/overview
+#' [RSPM]: https://packagemanager.posit.co/client/#/repos/2/overview
 #'
 #' Note that the function will temporarily change the `getOption('repos')`
 #' setting for `CRAN` to allow installation of CRAN packages from either the
-#' [RSPM] or [MRAN] time machines. The function will also modify the
+#' [RSPM] time machines. The function will also modify the
 #' `BIOCONDUCTOR_USE_CONTAINER_REPOSITORY` environment variable to temporarily
 #' disable binary package installations. This is due to the possibility of CRAN
 #' packages in the Bioconductor binary repositories that are not fixed to a
@@ -34,7 +32,7 @@
 #' CRAN, for intentionally out-of-date _Bioconductor_ releases (e.g., to support
 #' reproducible research). Our approach automatically provides an alteration to
 #' the `repos` option , e.g., `options(repos = c(CRAN =
-#' "https://mran.microsoft.com/snapshot/2020-02-08"))`.
+#' "https://packagemanager.posit.co/cran/2022-04-13/")).
 #'
 #' @inheritParams BiocManager::install
 #'

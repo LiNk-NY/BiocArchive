@@ -54,7 +54,7 @@ To install Bioconductor packages from previous releases, we strongly recommend
 using Bioconductor Docker containers, where possible. Such containers will have 
 `BiocManager` installed. `BiocArchive` allows versioned installations of
 [CRAN](https://cran.r-project.org/) packages from either the RStudio Package
-Manager (`RSPM`) or the Microsoft R Archive Network (`MRAN`) or the CRAN
+Manager (`RSPM`) or the CRAN
 [archive](https://cran.r-project.org/src/contrib/Archive/).
 
 ## Docker installation
@@ -82,21 +82,20 @@ install("MultiAssayExperiment", version = "3.14", dry.run = TRUE)
 __Note__. The `dry.run` argument returns the `CRAN` repository location. The
 default is to install `CRAN` packages from the RSPM snapshot repository.
 
-# RSPM and MRAN installations
+# RSPM installations
 
 The [RStudio Package Manager](https://packagemanager.rstudio.com/client/)
-(`RSPM`) and the [Microsoft R Archive Network](https://mran.microsoft.com/)
-(MRAN) allows installations of packages from their respective snapshot
+(`RSPM`) allows installations of packages from their respective snapshot
 repositories. To enable installation from these repositories, users must either
 set their `getOption("BiocArchive.snapshot")` option or the `snapshot` argument
-to either `RSPM` or `MRAN`. By default, the package uses `RSPM` snapshots tied
+to `RSPM`. By default, the package uses `RSPM` snapshots tied
 to the last build date of the Bioconductor version.
 
 ```{r}
-install("DESeq2", version = "3.14", dry.run = TRUE, snapshot = "MRAN")
+install("DESeq2", version = "3.14", dry.run = TRUE, snapshot = "RSPM")
 
 install(
-    "MultiAssayExperiment", version = "3.14", dry.run = TRUE, snapshot = "MRAN"
+    "MultiAssayExperiment", version = "3.14", dry.run = TRUE, snapshot = "RSPM"
 )
 ```
 
@@ -131,7 +130,7 @@ __Note__. The R version must coincide with the Bioconductor version sought.
 
 To check whether all packages are within the valid time interval of the
 Bioconductor release, the `valid()` function will compare package versions
-with those in either the `RSPM` or `MRAN` repository.
+with those in the `RSPM` repository.
 
 ```{r,eval=FALSE}
 valid(version = "3.14")

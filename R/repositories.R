@@ -6,7 +6,7 @@
 #'
 #' @details
 #' The CRAN repository reflects the `snapshot` arguments, which can be either
-#' `RSPM`, `MRAN`, or `CRAN`. The `CRAN` option will default to the established
+#' `RSPM`, or `CRAN`. The `CRAN` option will default to the established
 #' repository. For installation of archived packages on CRAN, see the
 #' [CRANinstall] function.
 #'

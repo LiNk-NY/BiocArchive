@@ -1,5 +1,4 @@
-.RSPM_URL <- "https://packagemanager.rstudio.com/cran/"
-.MRAN_URL <- "https://mran.microsoft.com/snapshot/"
+.RSPM_URL <- "https://packagemanager.posit.co/cran/"
 .CRAN_URL <- "https://cloud.r-project.org"
 
 .repositories_rspm <- function(cran, rspm_version) {
@@ -10,17 +9,6 @@
         if (is.na(rspm_version))
             stop("'RSPM' date format does not match '%Y-%m-%d'")
         paste0(.RSPM_URL, rspm_version)
-    }
-}
-
-.repositories_mran <- function(cran, mran_version) {
-    if (is.na(mran_version)) {
-        cran
-    } else {
-        mran_version <- as.Date(mran_version, "%Y-%m-%d")
-        if (is.na(mran_version))
-            stop("'MRAN' date format does not match '%Y-%m-%d'")
-        paste0(.MRAN_URL, mran_version)
     }
 }
 
@@ -84,7 +72,7 @@
         last_date <- buildDate(last_date)
     if (is.na(last_date))
         stop("The 'version' ", version, " archive is not supported")
-    valid <- c("CRAN", "MRAN", "RSPM")
+    valid <- c("CRAN", "RSPM")
     if (length(snapshot) != 1L || !snapshot %in% valid)
         .stop(
             "'getOption(\"BiocArchive.snapshot\")' must be one of %s",
@@ -96,7 +84,6 @@
     repos[rename] <- switch(
         snapshot,
         RSPM = .repositories_rspm(cran, last_date),
-        MRAN = .repositories_mran(cran, last_date),
         CRAN = .repositories_cran(cran)
     )
     options(repos = repos["CRAN"])

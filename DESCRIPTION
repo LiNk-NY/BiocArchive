@@ -9,8 +9,8 @@ Authors@R: person(
 Description: Install older versions of Bioconductor based on the R version
   currently installed in the system. The package relies on BiocManager to
   install packages but makes sure that CRAN package versions are downloaded
-  from either an MRAN or RSPM snapshot. These snapshots will conincide with
-  the last built date of the requested Bioconductor version.
+  from RSPM snapshots. These snapshots will conincide with the last published
+  built date of the requested Bioconductor version.
 Imports:
   BiocManager,
   methods,

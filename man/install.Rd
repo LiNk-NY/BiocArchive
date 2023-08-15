@@ -56,13 +56,13 @@ the Bioconductor version was current. This behavior is largely dictated by
 the actual R/Bioconductor installation, e.g., Bioconductor 3.11. For example,
 \emph{Bioconductor} version 3.11 was current until October 28, 2020; CRAN packages
 are therefore installed from a snapshot created on 2020-10-28. By default,
-the snapshots are from 'RSPM', the \href{https://packagemanager.rstudio.com/client/#/repos/2/overview}{RStudio Package Manager}. Use
-\code{options(BiocArchive.snapshot = "MRAN")} to instead use the \href{https://mran.microsoft.com/timemachine}{Microsoft R Archive Network}, or \code{options(BiocArchive.snapshot = "CRAN")} to use
-the current CRAN repository (i.e., disabling the snapshot feature).
+the snapshots are from 'RSPM', the \href{https://packagemanager.posit.co/client/#/repos/2/overview}{RStudio Package Manager}. Use
+\code{options(BiocArchive.snapshot = "CRAN")} to use the current CRAN repository
+(i.e., disabling the snapshot feature).
 
 Note that the function will temporarily change the \code{getOption('repos')}
 setting for \code{CRAN} to allow installation of CRAN packages from either the
-\href{https://packagemanager.rstudio.com/client/#/repos/2/overview}{RSPM} or \href{https://mran.microsoft.com/timemachine}{MRAN} time machines. The function will also modify the
+\href{https://packagemanager.posit.co/client/#/repos/2/overview}{RSPM} time machines. The function will also modify the
 \code{BIOCONDUCTOR_USE_CONTAINER_REPOSITORY} environment variable to temporarily
 disable binary package installations. This is due to the possibility of CRAN
 packages in the Bioconductor binary repositories that are not fixed to a
@@ -72,7 +72,8 @@ certain release date. Note that \code{BiocArchive.snapshot} has replaced
 It may be desirable to specify different default repositories, especially
 CRAN, for intentionally out-of-date \emph{Bioconductor} releases (e.g., to support
 reproducible research). Our approach automatically provides an alteration to
-the \code{repos} option , e.g., \code{options(repos = c(CRAN = "https://mran.microsoft.com/snapshot/2020-02-08"))}.
+the \code{repos} option , e.g., `options(repos = c(CRAN =
+"https://packagemanager.posit.co/cran/2022-04-13/")).
 }
 \examples{
 
