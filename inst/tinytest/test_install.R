@@ -22,12 +22,6 @@ expect_identical(
 )
 
 expect_identical(
-    install(version = version, dry.run = TRUE, snapshot = "MRAN"),
-    c(CRAN =
-        paste0(BiocArchive:::.MRAN_URL, buildDate(last_built_date)))
-)
-
-expect_identical(
     install(version = version, dry.run = TRUE, snapshot = "CRAN"),
     c(CRAN = BiocArchive:::.CRAN_URL)
 )
