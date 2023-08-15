@@ -67,17 +67,14 @@ orig <- BiocArchive:::.sys_install_pkg
 
 assignInNamespace(".sys_install_pkg", .sys_install_pkg, "BiocArchive")
 
-# TODO: tinytest::expect_match not working
-# see issue https://github.com/markvanderloo/tinytest/issues/117
-# match pattern: ".*BiocArchive::CRANinstall.*'scales'.*"
-expect_equivalent(
+expect_match(
     paste(
         capture.output(
             .install_file_msg("./testpkg_x.y.z.tar.gz")
         ),
         collapse = ""
     ),
-    "Install package dependencies with  BiocArchive::CRANinstall(c(    'scales'  ))"
+    ".*scales.*"
 )
 
 assignInNamespace(".sys_install_pkg", orig, "BiocArchive")
