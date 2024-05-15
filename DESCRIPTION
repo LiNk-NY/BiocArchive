@@ -20,6 +20,7 @@ Imports:
   utils,
   xml2
 Suggests:
+  BiocStyle,
   knitr,
   lubridate,
   rmarkdown,
