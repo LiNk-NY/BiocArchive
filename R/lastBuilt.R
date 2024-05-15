@@ -30,12 +30,10 @@ lastBuilt <- function(version = "all") {
     nodes <- html_nodes(buildrep, "div")[-seq(1, 2)]
     bioc_names <- html_text(html_nodes(nodes, "h3"))
     bioc_vers <- gsub("Bioconductor ", "", bioc_names, fixed = TRUE)
-    names(nodes) <- bioc_vers
     softstring <- "Software packages: last results"
-    builddates <- grep(
-        softstring, html_text(xml_find_all(nodes, ".//li[1]")),
-        fixed = TRUE, value = TRUE
-    )
+    firstdots <- html_text(xml_find_all(nodes, ".//li[1]"))
+    names(firstdots) <- bioc_vers
+    builddates <- grep(softstring, firstdots, fixed = TRUE, value = TRUE)
     lastdates <- gsub(
         ".*\\(([A-Za-z]{3,5}\\ [0-9]{1,2},\\ [0-9]{4}).*", "\\1", builddates
     )
@@ -45,7 +43,6 @@ lastBuilt <- function(version = "all") {
         version <- names(last_bioc_dates)
         last_bioc_dates[version]
     } else {
-        version <- as.character(version)
         bioc_date <- last_bioc_dates[version]
         BiocBuild(version = names(bioc_date), buildDate = unname(bioc_date))
     }
