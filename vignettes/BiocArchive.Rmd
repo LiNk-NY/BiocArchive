@@ -38,6 +38,12 @@ if (!requireNamespace("BiocManager", quietly = TRUE))
 BiocManager::install("waldronlab/BiocArchive")
 ```
 
+# Load the package
+
+```{r}
+library(BiocArchive)
+```
+
 # Last release version
 
 The `lastBuilt` helper function finds the last built date for the supplied
