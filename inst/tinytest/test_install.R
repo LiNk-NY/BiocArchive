@@ -10,15 +10,15 @@ expect_error(
     install(version = version, snapshot = "NULL")
 )
 expect_error(
-    install(version = version, snapshot = c("RSPM", "MRAN"))
+    install(version = version, snapshot = c("P3M", "MRAN"))
 )
 
 # check URLs with dry.run for version 3.14
 last_built_date <- lastBuilt(version = version)
 
 expect_identical(
-    install(version = version, dry.run = TRUE, snapshot = "RSPM"),
-    c(CRAN = paste0(BiocArchive:::.RSPM_URL, buildDate(last_built_date)))
+    install(version = version, dry.run = TRUE, snapshot = "P3M"),
+    c(CRAN = paste0(BiocArchive:::.P3M_URL, buildDate(last_built_date)))
 )
 
 expect_identical(

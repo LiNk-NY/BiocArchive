@@ -7,7 +7,7 @@
 repositories(
   site_repository = character(),
   version = BiocManager::version(),
-  snapshot = getOption("BiocArchive.snapshot", "RSPM"),
+  snapshot = getOption("BiocArchive.snapshot", "P3M"),
   last_built = lastBuilt(version = version)
 )
 }
@@ -24,7 +24,7 @@ repositories are required.}
 
 \item{snapshot}{\code{character(1)} The snapshot CRAN repository to use for
 reproducibility. This defaults to the value of
-\code{getOption("BiocArchive.snapshot", "RSPM")}.}
+\code{getOption("BiocArchive.snapshot", "P3M")}.}
 
 \item{last_built}{\verb{named character(1)} A character scalar of the date of the
 Bioconductor versions last build. The name corresponds to the Bioconductor
@@ -42,7 +42,7 @@ of the archived Bioconductor release.
 }
 \details{
 The CRAN repository reflects the \code{snapshot} arguments, which can be either
-\code{RSPM}, \code{MRAN}, or \code{CRAN}. The \code{CRAN} option will default to the established
+\code{P3M}, or \code{CRAN}. The \code{CRAN} option will default to the established
 repository. For installation of archived packages on CRAN, see the
 \link{CRANinstall} function.
 
@@ -54,7 +54,7 @@ include CRAN packages that are not fixed to the release date.
 \examples{
 if (interactive()) {
     # run within the Bioconductor 3.14 Docker container
-    repositories(version = "3.14", snapshot = "RSPM")
+    repositories(version = "3.14", snapshot = "P3M")
 }
 
 }

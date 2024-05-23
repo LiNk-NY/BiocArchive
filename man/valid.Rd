@@ -15,7 +15,7 @@ valid(
   site_repository = character(),
   version = BiocManager::version(),
   last_built = lastBuilt(version = version),
-  snapshot = getOption("BiocArchive.snapshot", "RSPM")
+  snapshot = getOption("BiocArchive.snapshot", "P3M")
 )
 }
 \arguments{
@@ -55,7 +55,7 @@ function reports the date from the value of the \code{version} argument.}
 
 \item{snapshot}{\code{character(1)} The snapshot CRAN repository to use for
 reproducibility. This defaults to the value of
-\code{getOption("BiocArchive.snapshot", "RSPM")}.}
+\code{getOption("BiocArchive.snapshot", "P3M")}.}
 }
 \value{
 \code{biocValid} list object with elements \code{too_new} and \code{out_of_date}

@@ -13,15 +13,15 @@
 #' the actual R/Bioconductor installation, e.g., Bioconductor 3.11. For example,
 #' _Bioconductor_ version 3.11 was current until October 28, 2020; CRAN packages
 #' are therefore installed from a snapshot created on 2020-10-28. By default,
-#' the snapshots are from 'RSPM', the [RStudio Package Manager][RSPM]. Use
+#' the snapshots are from 'P3M', the [Posit Public Package Manager][P3M]. Use
 #' `options(BiocArchive.snapshot = "CRAN")` to use the current CRAN repository
 #' (i.e., disabling the snapshot feature).
 #'
-#' [RSPM]: https://packagemanager.posit.co/client/#/repos/2/overview
+#' [P3M]: https://packagemanager.posit.co/client/
 #'
 #' Note that the function will temporarily change the `getOption('repos')`
 #' setting for `CRAN` to allow installation of CRAN packages from either the
-#' [RSPM] time machines. The function will also modify the
+#' [P3M] time machines. The function will also modify the
 #' `BIOCONDUCTOR_USE_CONTAINER_REPOSITORY` environment variable to temporarily
 #' disable binary package installations. This is due to the possibility of CRAN
 #' packages in the Bioconductor binary repositories that are not fixed to a
@@ -42,7 +42,7 @@
 #'
 #' @param snapshot `character(1)` The snapshot CRAN repository to use for
 #'   reproducibility. This defaults to the value of
-#'   `getOption("BiocArchive.snapshot", "RSPM")`.
+#'   `getOption("BiocArchive.snapshot", "P3M")`.
 #'
 #' @param dry.run `logical(1)` Whether to show only the time machine repository
 #'   and forgo the package installation.
@@ -60,13 +60,13 @@
 #'
 #' @examples
 #'
-#' install("DESeq2", version = "3.14", snapshot = "RSPM", dry.run = TRUE)
+#' install("DESeq2", version = "3.14", snapshot = "P3M", dry.run = TRUE)
 #'
 #' @export
 install <- function(
         pkgs = character(),
         version = BiocManager::version(),
-        snapshot = getOption("BiocArchive.snapshot", "RSPM"),
+        snapshot = getOption("BiocArchive.snapshot", "P3M"),
         dry.run = FALSE,
         ...,
         last_built = lastBuilt(version = version)

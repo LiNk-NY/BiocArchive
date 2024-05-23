@@ -6,7 +6,7 @@
 #'
 #' @details
 #' The CRAN repository reflects the `snapshot` arguments, which can be either
-#' `RSPM`, or `CRAN`. The `CRAN` option will default to the established
+#' `P3M`, or `CRAN`. The `CRAN` option will default to the established
 #' repository. For installation of archived packages on CRAN, see the
 #' [CRANinstall] function.
 #'
@@ -26,14 +26,14 @@
 #' @examples
 #' if (interactive()) {
 #'     # run within the Bioconductor 3.14 Docker container
-#'     repositories(version = "3.14", snapshot = "RSPM")
+#'     repositories(version = "3.14", snapshot = "P3M")
 #' }
 #'
 #' @export
 repositories <- function(
     site_repository = character(),
     version = BiocManager::version(),
-    snapshot = getOption("BiocArchive.snapshot", "RSPM"),
+    snapshot = getOption("BiocArchive.snapshot", "P3M"),
     last_built = lastBuilt(version = version)
 ) {
     repos <- getOption("repos")

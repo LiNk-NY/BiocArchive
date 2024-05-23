@@ -1,14 +1,14 @@
-.RSPM_URL <- "https://packagemanager.posit.co/cran/"
+.P3M_URL <- "https://packagemanager.posit.co/cran/"
 .CRAN_URL <- "https://cloud.r-project.org"
 
-.repositories_rspm <- function(cran, rspm_version) {
-    if (is.na(rspm_version)) {
+.repositories_p3m <- function(cran, p3m_version) {
+    if (is.na(p3m_version)) {
         cran
     } else {
-        rspm_version <- as.Date(rspm_version, "%Y-%m-%d")
-        if (is.na(rspm_version))
-            stop("'RSPM' date format does not match '%Y-%m-%d'")
-        paste0(.RSPM_URL, rspm_version)
+        p3m_version <- as.Date(p3m_version, "%Y-%m-%d")
+        if (is.na(p3m_version))
+            stop("'P3M' date format does not match '%Y-%m-%d'")
+        paste0(.P3M_URL, p3m_version)
     }
 }
 
@@ -68,7 +68,7 @@
 {
     if (is.na(last_date))
         stop("The 'version' ", version, " archive is not supported")
-    valid <- c("CRAN", "RSPM")
+    valid <- c("CRAN", "P3M")
     if (length(snapshot) != 1L || !snapshot %in% valid)
         .stop(
             "'getOption(\"BiocArchive.snapshot\")' must be one of %s",
@@ -79,7 +79,7 @@
     rename <- repos == "@CRAN@" | names(repos) == "CRAN"
     repos[rename] <- switch(
         snapshot,
-        RSPM = .repositories_rspm(cran, last_date),
+        P3M = .repositories_p3m(cran, last_date),
         CRAN = .repositories_cran(cran)
     )
     options(repos = repos["CRAN"])

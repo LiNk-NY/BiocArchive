@@ -31,7 +31,7 @@ valid <- function(
     site_repository = character(),
     version = BiocManager::version(),
     last_built = lastBuilt(version = version),
-    snapshot = getOption("BiocArchive.snapshot", "RSPM")
+    snapshot = getOption("BiocArchive.snapshot", "P3M")
 ) {
     repos <- getOption("repos")
 

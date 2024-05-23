@@ -11,8 +11,8 @@
 #' @importFrom rvest html_nodes html_text
 #' @importFrom xml2 read_html xml_find_all
 #'
-#' @return When version is specified, a `BiocBuild` class instance for that
-#'   version
+#' @return character(1) The last build date for the specified Bioconductor
+#'   version.
 #'
 #' @examples
 #'

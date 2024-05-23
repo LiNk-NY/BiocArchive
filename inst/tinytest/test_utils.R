@@ -1,10 +1,10 @@
-rspm <- "https://packagemanager.posit.co/cran"
+p3m <- "https://packagemanager.posit.co/cran"
 expect_identical(
-    BiocArchive:::.repositories_rspm(rspm, NA),
-    rspm
+    BiocArchive:::.repositories_p3m(p3m, NA),
+    p3m
 )
 expect_error(
-    BiocArchive:::.repositories_rspm(rspm, "0000-00-00")
+    BiocArchive:::.repositories_p3m(p3m, "0000-00-00")
 )
 cran <- c(CRAN = "@CRAN@")
 expect_identical(
