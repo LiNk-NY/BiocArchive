@@ -1,7 +1,7 @@
 Package: BiocArchive
 Title: Access the Bioconductor archives and install packages from previous
   releases
-Version: 1.0.0
+Version: 1.0.1
 Authors@R: person(
     "Marcel", "Ramos", , "marcel.ramosperez@roswellpark.org",
     c("aut", "cre"), c(ORCID = "0000-0002-3242-0582")
@@ -31,4 +31,4 @@ License: Artistic-2.0
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.1
-Date: 2024-05-16
+Date: 2024-05-23
