@@ -67,7 +67,9 @@ orig <- BiocArchive:::.sys_install_pkg
 
 assignInNamespace(".sys_install_pkg", .sys_install_pkg, "BiocArchive")
 
-expect_match(
+## use tinytest:: until fixed in
+## https://github.com/markvanderloo/tinytest/issues/124
+tinytest::expect_match(
     paste(
         capture.output(
             .install_file_msg("./testpkg_x.y.z.tar.gz")
