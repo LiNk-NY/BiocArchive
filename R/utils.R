@@ -51,8 +51,6 @@
 
 #' @importFrom methods is
 .resolve_archive <- function(pkg, last_built_date) {
-    if (is(last_built_date, "BiocBuild"))
-        last_built_date <- buildDate(last_built_date)
     repo_link <- paste(.CRAN_ARCHIVE_REPOSITORY, pkg, sep = "/")
     table <-
         .get_cran_table(repo_link, header = TRUE)[, c("Name", "Last modified")]
@@ -68,8 +66,6 @@
 .replace_repo <-
     function(repos = getOption("repos"), version, last_date, snapshot)
 {
-    if (is(last_date, "BiocBuild"))
-        last_date <- buildDate(last_date)
     if (is.na(last_date))
         stop("The 'version' ", version, " archive is not supported")
     valid <- c("CRAN", "RSPM")

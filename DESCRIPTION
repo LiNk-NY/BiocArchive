@@ -18,7 +18,8 @@ Imports:
   RCurl,
   rvest,
   utils,
-  xml2
+  xml2,
+  yaml
 Suggests:
   BiocStyle,
   knitr,

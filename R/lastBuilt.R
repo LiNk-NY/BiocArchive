@@ -26,24 +26,21 @@ lastBuilt <- function(version = "all") {
     )
     if (!requireNamespace("lubridate", quietly = TRUE))
         stop("Install 'lubridate' to run 'lastBuilt'")
-    buildrep <- read_html("https://bioconductor.org/checkResults/")
-    nodes <- html_nodes(buildrep, "div")[-seq(1, 2)]
-    bioc_names <- html_text(html_nodes(nodes, "h3"))
-    bioc_vers <- gsub("Bioconductor ", "", bioc_names, fixed = TRUE)
-    softstring <- "Software packages: last results"
-    firstdots <- html_text(xml_find_all(nodes, ".//li[1]"))
-    names(firstdots) <- bioc_vers
-    builddates <- grep(softstring, firstdots, fixed = TRUE, value = TRUE)
-    lastdates <- gsub(
-        ".*\\(([A-Za-z]{3,5}\\ [0-9]{1,2},\\ [0-9]{4}).*", "\\1", builddates
+
+    config <- yaml::read_yaml("https://bioconductor.org/config.yaml")
+    lastdates <- config[["release_last_built_dates"]]
+
+    if (identical(version, "all"))
+        version <- names(lastdates)
+
+    if (!all(version %in% names(lastdates)))
+        stop("Bioconductor version not found")
+
+    lastdates <- structure(
+        as.character(lastdates), .Names = names(lastdates)
     )
     last_bioc_dates <- format(lubridate::mdy(lastdates), "%Y-%m-%d")
     names(last_bioc_dates) <- names(lastdates)
-    if (identical(version, "all")) {
-        version <- names(last_bioc_dates)
-        last_bioc_dates[version]
-    } else {
-        bioc_date <- last_bioc_dates[version]
-        BiocBuild(version = names(bioc_date), buildDate = unname(bioc_date))
-    }
+
+    last_bioc_dates[version]
 }
