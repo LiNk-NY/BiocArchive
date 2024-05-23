@@ -11,8 +11,8 @@ lastBuilt(version = "all")
 last build date is sought. By default, 'all' versions will be returned.}
 }
 \value{
-When version is specified, a \code{BiocBuild} class instance for that
-version
+character(1) The last build date for the specified Bioconductor
+version.
 }
 \description{
 The function facilitates the discovery of last build dates useful for

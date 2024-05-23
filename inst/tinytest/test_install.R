@@ -18,7 +18,7 @@ last_built_date <- lastBuilt(version = version)
 
 expect_identical(
     install(version = version, dry.run = TRUE, snapshot = "P3M"),
-    c(CRAN = paste0(BiocArchive:::.P3M_URL, buildDate(last_built_date)))
+    c(CRAN = paste0(BiocArchive:::.P3M_URL, last_built_date))
 )
 
 expect_identical(
