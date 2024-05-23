@@ -1,7 +1,7 @@
 Package: BiocArchive
 Title: Access the Bioconductor archives and install packages from previous
   releases
-Version: 0.99.19
+Version: 1.0.0
 Authors@R: person(
     "Marcel", "Ramos", , "marcel.ramosperez@roswellpark.org",
     c("aut", "cre"), c(ORCID = "0000-0002-3242-0582")
