@@ -19,7 +19,7 @@ Currently, it is available via GitHub.
 if (!requireNamespace("BiocManager", quietly = TRUE))
     install.packages("BiocManager")
 
-BiocManager::install("waldronlab/BiocArchive")
+BiocManager::install("Bioconductor/BiocArchive")
 ```
 
 # Load the package
