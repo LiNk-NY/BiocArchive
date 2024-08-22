@@ -3,7 +3,7 @@ Title: Access the Bioconductor archives and install packages from previous
   releases
 Version: 1.0.1
 Authors@R: person(
-    "Marcel", "Ramos", , "marcel.ramosperez@roswellpark.org",
+    "Marcel", "Ramos", , "marcel.ramos@sph.cuny.edu",
     c("aut", "cre"), c(ORCID = "0000-0002-3242-0582")
   )
 Description: Install older versions of Bioconductor based on the R version
